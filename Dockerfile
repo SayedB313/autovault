@@ -27,6 +27,8 @@ COPY . .
 ENV DATABASE_URL="postgresql://build:build@localhost:5432/build"
 RUN npx prisma generate
 
+RUN ls -la src/generated/prisma/ && cat src/generated/prisma/index.ts | head -5
+
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
 
