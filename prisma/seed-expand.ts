@@ -15,15 +15,163 @@
  */
 
 import "dotenv/config";
-import { PrismaClient } from "../src/generated/prisma";
+import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import slugify from "slugify";
-import {
-  searchPlaces,
-  getPhotoUrls,
-  CostTracker,
-  type PlaceResult,
-} from "../src/lib/google-places";
+
+// Inline API helpers to avoid @/ path alias issues in Docker
+const API_KEY = process.env.GOOGLE_PLACES_API_KEY;
+
+class CostTracker {
+  private textSearchCount = 0;
+  private photoFetchCount = 0;
+  private readonly budgetLimit: number;
+  private static TEXT_SEARCH_COST_PER_1K = 32;
+  private static PHOTO_COST_PER_1K = 7;
+
+  constructor(budgetLimit: number = 100) {
+    this.budgetLimit = budgetLimit;
+  }
+  recordTextSearch(): void { this.textSearchCount++; }
+  recordPhotoFetch(count: number = 1): void { this.photoFetchCount += count; }
+
+  get estimatedCost(): number {
+    return (
+      (this.textSearchCount / 1000) * CostTracker.TEXT_SEARCH_COST_PER_1K +
+      (this.photoFetchCount / 1000) * CostTracker.PHOTO_COST_PER_1K
+    );
+  }
+  get isOverBudget(): boolean { return this.estimatedCost >= this.budgetLimit; }
+  get remaining(): number { return Math.max(0, this.budgetLimit - this.estimatedCost); }
+
+  summary(): string {
+    return [
+      `Text searches: ${this.textSearchCount}`,
+      `Photo fetches: ${this.photoFetchCount}`,
+      `Estimated cost: $${this.estimatedCost.toFixed(2)} / $${this.budgetLimit}`,
+      `Remaining budget: $${this.remaining.toFixed(2)}`,
+    ].join(" | ");
+  }
+}
+
+interface PlaceResult {
+  googlePlaceId: string;
+  name: string;
+  formattedAddress: string;
+  lat: number;
+  lng: number;
+  phone?: string;
+  website?: string;
+  rating?: number;
+  userRatingCount?: number;
+  photoReferences: string[];
+  types?: string[];
+  hours?: Record<string, string>;
+}
+
+let lastRequest = 0;
+async function rateLimit() {
+  const now = Date.now();
+  const elapsed = now - lastRequest;
+  if (elapsed < 200) await new Promise((r) => setTimeout(r, 200 - elapsed));
+  lastRequest = Date.now();
+}
+
+async function searchPlaces(
+  query: string,
+  locationBias: { lat: number; lng: number; radiusMeters?: number },
+  costTracker: CostTracker,
+  maxResults: number = 20
+): Promise<PlaceResult[]> {
+  if (costTracker.isOverBudget) return [];
+  await rateLimit();
+
+  const body = {
+    textQuery: query,
+    locationBias: {
+      circle: {
+        center: { latitude: locationBias.lat, longitude: locationBias.lng },
+        radius: locationBias.radiusMeters ?? 50000,
+      },
+    },
+    maxResultCount: Math.min(maxResults, 20),
+    languageCode: "en",
+  };
+
+  const fieldMask = [
+    "places.id", "places.displayName", "places.formattedAddress",
+    "places.location", "places.nationalPhoneNumber", "places.websiteUri",
+    "places.rating", "places.userRatingCount", "places.photos",
+    "places.regularOpeningHours", "places.types", "places.businessStatus",
+  ].join(",");
+
+  const res = await fetch("https://places.googleapis.com/v1/places:searchText", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Goog-Api-Key": API_KEY!,
+      "X-Goog-FieldMask": fieldMask,
+    },
+    body: JSON.stringify(body),
+  });
+
+  costTracker.recordTextSearch();
+
+  if (!res.ok) {
+    console.error(`    [API ERROR] ${res.status}: ${await res.text()}`);
+    return [];
+  }
+
+  const data = await res.json();
+  const places: any[] = data.places || [];
+
+  return places
+    .filter((p: any) => p.businessStatus !== "CLOSED_PERMANENTLY")
+    .map((p: any) => {
+      let hours: Record<string, string> | undefined;
+      if (p.regularOpeningHours?.weekdayDescriptions) {
+        hours = {};
+        for (const desc of p.regularOpeningHours.weekdayDescriptions) {
+          const [day, ...rest] = desc.split(": ");
+          if (day) hours[day] = rest.join(": ") || "Closed";
+        }
+      }
+      return {
+        googlePlaceId: p.id,
+        name: p.displayName?.text || "Unknown",
+        formattedAddress: p.formattedAddress || "",
+        lat: p.location?.latitude || 0,
+        lng: p.location?.longitude || 0,
+        phone: p.nationalPhoneNumber,
+        website: p.websiteUri,
+        rating: p.rating,
+        userRatingCount: p.userRatingCount,
+        photoReferences: (p.photos || []).map((ph: any) => ph.name).filter(Boolean),
+        types: p.types,
+        hours,
+      };
+    });
+}
+
+async function getPhotoUrls(
+  refs: string[],
+  costTracker: CostTracker,
+  maxPhotos: number = 1,
+  maxWidth: number = 800
+): Promise<string[]> {
+  const urls: string[] = [];
+  for (const ref of refs.slice(0, maxPhotos)) {
+    if (costTracker.isOverBudget) break;
+    await rateLimit();
+    const url = `https://places.googleapis.com/v1/${ref}/media?maxWidthPx=${maxWidth}&key=${API_KEY}`;
+    try {
+      const res = await fetch(url, { redirect: "follow" });
+      costTracker.recordPhotoFetch();
+      if (res.ok) urls.push(res.url);
+    } catch { /* skip */ }
+  }
+  return urls;
+}
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! });
 const prisma = new PrismaClient({ adapter });
