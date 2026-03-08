@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -11,4 +5,333 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+}
+
+// ============================================================
+// AUTH MODELS (NextAuth.js / Auth.js)
+// ============================================================
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  role          UserRole  @default(USER)
+
+  stripeCustomerId String? @unique
+
+  accounts     Account[]
+  sessions     Session[]
+  facilities   Facility[]
+  reviews      Review[]
+  leads        Lead[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ============================================================
+// CORE MODELS
+// ============================================================
+
+model Facility {
+  id          String  @id @default(cuid())
+  slug        String  @unique
+  name        String
+  description String? @db.Text
+
+  // Location
+  address String
+  city    String
+  state   String
+  zip     String?
+  country String  @default("US")
+  lat     Float
+  lng     Float
+
+  // Contact
+  phone   String?
+  email   String?
+  website String?
+
+  // Categorization
+  storageTypes StorageType[]
+  vehicleTypes VehicleType[]
+  amenities    Amenity[]
+
+  // Pricing
+  priceRangeMin Float?
+  priceRangeMax Float?
+  pricePer      PricePer @default(MONTH)
+
+  // Hours (JSON: { mon: "9:00-17:00", tue: "9:00-17:00", ... })
+  hours Json?
+
+  // Google Places
+  googlePlaceId String? @unique
+
+  // Ownership & Tier
+  claimedById String?
+  claimedBy   User?    @relation(fields: [claimedById], references: [id])
+  tier        FacilityTier @default(FREE)
+  verifiedAt  DateTime?
+  featuredUntil DateTime?
+
+  // Ratings (denormalized)
+  avgRating   Float @default(0)
+  reviewCount Int   @default(0)
+
+  // Relations
+  photos       FacilityPhoto[]
+  reviews      Review[]
+  leads        Lead[]
+  subscription Subscription?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([city, state])
+  @@index([state])
+  @@index([lat, lng])
+  @@index([tier])
+  @@index([avgRating])
+}
+
+model FacilityPhoto {
+  id         String @id @default(cuid())
+  facilityId String
+  url        String
+  alt        String?
+  order      Int    @default(0)
+  source     PhotoSource @default(SEED)
+
+  facility Facility @relation(fields: [facilityId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([facilityId])
+}
+
+model Review {
+  id         String @id @default(cuid())
+  facilityId String
+  userId     String
+  rating     Int    // 1-5
+  title      String?
+  body       String? @db.Text
+
+  vehicleType VehicleType?
+  storageType StorageType?
+
+  facility Facility @relation(fields: [facilityId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([facilityId])
+  @@index([userId])
+}
+
+model Subscription {
+  id         String @id @default(cuid())
+  userId     String
+  facilityId String @unique
+  tier       SubscriptionTier
+
+  stripeSubscriptionId String? @unique
+  status               SubscriptionStatus @default(ACTIVE)
+  currentPeriodEnd     DateTime?
+
+  facility Facility @relation(fields: [facilityId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model City {
+  id        String @id @default(cuid())
+  slug      String @unique
+  name      String
+  state     String
+  stateSlug String
+
+  lat Float
+  lng Float
+  population Int @default(0)
+
+  facilityCount Int @default(0)
+
+  metaTitle       String?
+  metaDescription String? @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([slug, stateSlug])
+  @@index([stateSlug])
+}
+
+model Lead {
+  id         String @id @default(cuid())
+  facilityId String
+  userId     String?
+  name       String
+  email      String
+  phone      String?
+  message    String? @db.Text
+
+  vehicleType VehicleType?
+  storageNeed String?
+
+  status LeadStatus @default(NEW)
+
+  facility Facility @relation(fields: [facilityId], references: [id], onDelete: Cascade)
+  user     User?    @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@index([facilityId])
+}
+
+// Blog posts for SEO content
+model BlogPost {
+  id        String @id @default(cuid())
+  slug      String @unique
+  title     String
+  excerpt   String? @db.Text
+  content   String  @db.Text
+  coverImage String?
+
+  published   Boolean  @default(false)
+  publishedAt DateTime?
+
+  metaTitle       String?
+  metaDescription String? @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ============================================================
+// ENUMS
+// ============================================================
+
+enum UserRole {
+  USER
+  OWNER
+  ADMIN
+}
+
+enum StorageType {
+  INDOOR
+  OUTDOOR
+  COVERED
+  CLIMATE_CONTROLLED
+  ENCLOSED
+}
+
+enum VehicleType {
+  CAR
+  MOTORCYCLE
+  RV
+  BOAT
+  CLASSIC
+  EXOTIC
+  TRUCK
+  TRAILER
+}
+
+enum Amenity {
+  ACCESS_24HR
+  SECURITY_CAMERAS
+  GATED
+  ALARM_SYSTEM
+  FIRE_SUPPRESSION
+  EV_CHARGING
+  CONCIERGE
+  DETAILING
+  MAINTENANCE
+  TRANSPORT
+  INSURANCE
+  CLIMATE_MONITORING
+  WIFI
+  LOUNGE
+  CAR_WASH
+  BATTERY_TENDER
+}
+
+enum PricePer {
+  DAY
+  WEEK
+  MONTH
+  YEAR
+}
+
+enum FacilityTier {
+  FREE
+  VERIFIED
+  PREMIUM
+}
+
+enum PhotoSource {
+  SEED
+  OWNER
+  USER
+  GOOGLE
+}
+
+enum SubscriptionTier {
+  VERIFIED
+  PREMIUM
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELED
+  PAST_DUE
+  TRIALING
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  CONVERTED
+  CLOSED
 }
