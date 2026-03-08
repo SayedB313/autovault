@@ -5,7 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ExternalLink, Eye, Users, MessageSquare } from "lucide-react";
+import { Eye, Users, MessageSquare } from "lucide-react";
+import EditForm from "./edit-form";
 
 export const dynamic = "force-dynamic";
 
@@ -64,61 +65,24 @@ export default async function FacilityManagePage({
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Facility Details */}
+        {/* Facility Details - Editable */}
         <div className="lg:col-span-2 space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Facility Details</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <label className="text-sm font-medium text-muted-foreground">Address</label>
-                <p>{facility.address}</p>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="text-sm font-medium text-muted-foreground">Phone</label>
-                  <p>{facility.phone || "Not set"}</p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-muted-foreground">Website</label>
-                  <p>
-                    {facility.website ? (
-                      <a href={facility.website} className="text-blue-600 hover:underline flex items-center gap-1">
-                        Visit <ExternalLink className="h-3 w-3" />
-                      </a>
-                    ) : (
-                      "Not set"
-                    )}
-                  </p>
-                </div>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-muted-foreground">Storage Types</label>
-                <div className="flex flex-wrap gap-1 mt-1">
-                  {facility.storageTypes.map((t) => (
-                    <Badge key={t} variant="secondary">{t.replace("_", " ")}</Badge>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-muted-foreground">Vehicle Types</label>
-                <div className="flex flex-wrap gap-1 mt-1">
-                  {facility.vehicleTypes.map((t) => (
-                    <Badge key={t} variant="secondary">{t}</Badge>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-muted-foreground">Tier</label>
-                <div className="mt-1">
-                  <Badge variant={facility.tier === "PREMIUM" ? "default" : "outline"}>
-                    {facility.tier}
-                  </Badge>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <EditForm
+            facility={{
+              id: facility.id,
+              name: facility.name,
+              description: facility.description,
+              phone: facility.phone,
+              email: facility.email,
+              website: facility.website,
+              storageTypes: facility.storageTypes,
+              vehicleTypes: facility.vehicleTypes,
+              amenities: facility.amenities,
+              priceRangeMin: facility.priceRangeMin,
+              priceRangeMax: facility.priceRangeMax,
+              pricePer: facility.pricePer,
+            }}
+          />
 
           {/* Recent Leads */}
           <Card>

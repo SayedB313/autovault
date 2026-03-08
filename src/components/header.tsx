@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Menu, Car } from "lucide-react";
+import { useSession, signOut } from "next-auth/react";
+import { Menu, Car, LogOut, LayoutDashboard, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -14,13 +15,16 @@ import {
 
 const NAV_LINKS = [
   { label: "Search", href: "/search" },
-  { label: "Luxury", href: "/luxury" },
+  { label: "Luxury", href: "/luxury-car-storage" },
   { label: "About", href: "/about" },
   { label: "Pricing", href: "/pricing" },
 ] as const;
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { data: session, status } = useSession();
+
+  const isAuthed = status === "authenticated" && session?.user;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur-sm supports-backdrop-filter:bg-white/80 dark:bg-background/95 dark:supports-backdrop-filter:bg-background/80">
@@ -49,15 +53,51 @@ export function Header() {
 
         {/* Desktop Actions */}
         <div className="hidden items-center gap-3 md:flex">
-          <Link
-            href="/sign-in"
-            className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-          >
-            Sign In
-          </Link>
-          <Button size="sm" render={<Link href="/list-facility" />}>
-            List Your Facility
-          </Button>
+          {isAuthed ? (
+            <>
+              <Link
+                href="/dashboard"
+                className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+              >
+                <LayoutDashboard className="size-4" />
+                Dashboard
+              </Link>
+              {session.user.image ? (
+                <Link href="/dashboard">
+                  <img
+                    src={session.user.image}
+                    alt=""
+                    className="size-8 rounded-full border"
+                  />
+                </Link>
+              ) : (
+                <Link href="/dashboard">
+                  <div className="size-8 rounded-full border bg-muted flex items-center justify-center">
+                    <User className="size-4 text-muted-foreground" />
+                  </div>
+                </Link>
+              )}
+              <button
+                onClick={() => signOut()}
+                className="text-sm text-muted-foreground hover:text-foreground"
+                title="Sign out"
+              >
+                <LogOut className="size-4" />
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/auth/signin"
+                className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+              >
+                Sign In
+              </Link>
+              <Button size="sm" render={<Link href="/auth/signin" />}>
+                List Your Facility
+              </Button>
+            </>
+          )}
         </div>
 
         {/* Mobile Menu */}
@@ -99,21 +139,45 @@ export function Header() {
 
                 <div className="my-2 h-px bg-border" />
 
-                <Link
-                  href="/sign-in"
-                  onClick={() => setMobileOpen(false)}
-                  className="rounded-lg px-3 py-2.5 text-base font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                >
-                  Sign In
-                </Link>
-
-                <Button
-                  className="mt-2"
-                  render={<Link href="/list-facility" />}
-                  onClick={() => setMobileOpen(false)}
-                >
-                  List Your Facility
-                </Button>
+                {isAuthed ? (
+                  <>
+                    <Link
+                      href="/dashboard"
+                      onClick={() => setMobileOpen(false)}
+                      className="rounded-lg px-3 py-2.5 text-base font-medium text-foreground transition-colors hover:bg-muted flex items-center gap-2"
+                    >
+                      <LayoutDashboard className="size-4" />
+                      Dashboard
+                    </Link>
+                    <button
+                      onClick={() => {
+                        setMobileOpen(false);
+                        signOut();
+                      }}
+                      className="rounded-lg px-3 py-2.5 text-base font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground text-left flex items-center gap-2"
+                    >
+                      <LogOut className="size-4" />
+                      Sign Out
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      href="/auth/signin"
+                      onClick={() => setMobileOpen(false)}
+                      className="rounded-lg px-3 py-2.5 text-base font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                    >
+                      Sign In
+                    </Link>
+                    <Button
+                      className="mt-2"
+                      render={<Link href="/auth/signin" />}
+                      onClick={() => setMobileOpen(false)}
+                    >
+                      List Your Facility
+                    </Button>
+                  </>
+                )}
               </nav>
             </SheetContent>
           </Sheet>

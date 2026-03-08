@@ -2,10 +2,10 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Check, Crown, Shield } from "lucide-react";
 import { PLANS } from "@/lib/stripe";
+import { UpgradeButton, ManageBillingButton } from "./upgrade-button";
 
 export const dynamic = "force-dynamic";
 
@@ -110,9 +110,9 @@ export default async function BillingPage() {
                     {facility.tier}
                   </Badge>
                   {facility.tier === "FREE" ? (
-                    <Button size="sm">Upgrade</Button>
+                    <UpgradeButton facilityId={facility.id} tier="VERIFIED" />
                   ) : (
-                    <Button variant="outline" size="sm">Manage</Button>
+                    <ManageBillingButton />
                   )}
                 </div>
               </CardContent>
