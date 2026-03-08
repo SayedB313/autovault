@@ -9,7 +9,9 @@ COPY package.json package-lock.json ./
 COPY prisma ./prisma/
 COPY prisma.config.ts ./
 COPY tsconfig.json ./
-RUN npm ci
+
+# Force install ALL deps including dev (Coolify injects NODE_ENV=production)
+RUN NODE_ENV=development npm ci
 
 # Generate Prisma client (dummy URL — generate doesn't connect to DB)
 ENV DATABASE_URL="postgresql://build:build@localhost:5432/build"
@@ -24,11 +26,6 @@ COPY . .
 # Generate Prisma client in builder stage
 ENV DATABASE_URL="postgresql://build:build@localhost:5432/build"
 RUN npx prisma generate
-
-# Debug: verify files exist before build
-RUN ls -la node_modules/@tailwindcss/postcss/package.json && \
-    ls -la src/generated/prisma/index.ts && \
-    echo "All files verified"
 
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
