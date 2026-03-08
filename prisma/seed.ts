@@ -342,7 +342,7 @@ async function seed() {
 
       const results = await searchPlaces(
         `${query} in ${city.name}, ${city.state}`,
-        { lat: city.lat, lng: city.lng, radiusMeters: 80000 },
+        { lat: city.lat, lng: city.lng, radiusMeters: 50000 },
         costTracker,
         20
       );
