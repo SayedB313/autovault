@@ -28,9 +28,8 @@ export async function generateMetadata({
   return generateStateMeta(stateInfo.abbreviation, cityCount, facilityCount);
 }
 
-export async function generateStaticParams() {
-  return US_STATES.map((s) => ({ state: s.slug }));
-}
+// Dynamic rendering — DB not available at build time
+export const dynamic = "force-dynamic";
 
 export default async function StatePage({ params }: StatePageProps) {
   const { state: stateSlug } = await params;

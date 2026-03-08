@@ -8,6 +8,8 @@ import { generateCityMeta, cityJsonLd } from "@/lib/seo";
 import { FacilityCard } from "@/components/facility-card";
 import { SearchBar } from "@/components/search-bar";
 
+export const dynamic = "force-dynamic";
+
 interface CityPageProps {
   params: Promise<{ state: string; city: string }>;
 }

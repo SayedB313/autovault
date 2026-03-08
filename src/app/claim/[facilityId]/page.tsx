@@ -5,6 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import ClaimForm from "./claim-form";
 
+export const dynamic = "force-dynamic";
+
 export default async function ClaimPage({
   params,
 }: {

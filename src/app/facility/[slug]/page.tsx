@@ -47,21 +47,8 @@ export async function generateMetadata({
   return generateFacilityMeta(facility);
 }
 
-export async function generateStaticParams() {
-  const facilities = await prisma.facility.findMany({
-    where: {
-      OR: [
-        { tier: "PREMIUM" },
-        { tier: "VERIFIED" },
-        { reviewCount: { gte: 5 } },
-      ],
-    },
-    select: { slug: true },
-    take: 200,
-    orderBy: { reviewCount: "desc" },
-  });
-  return facilities.map((f) => ({ slug: f.slug }));
-}
+// Dynamic rendering — DB not available at build time
+export const dynamic = "force-dynamic";
 
 const STORAGE_TYPE_LABELS: Record<string, string> = {
   INDOOR: "Indoor",

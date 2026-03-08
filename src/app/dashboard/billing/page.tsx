@@ -7,6 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import { Check, Crown, Shield } from "lucide-react";
 import { PLANS } from "@/lib/stripe";
 
+export const dynamic = "force-dynamic";
+
 export default async function BillingPage() {
   const session = await auth();
   if (!session?.user?.id) redirect("/auth/signin");

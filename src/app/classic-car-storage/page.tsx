@@ -4,6 +4,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Gauge, Droplets, Wrench, FileCheck } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Classic Car Storage | Collector Vehicle Facilities | AutoVault",
   description:

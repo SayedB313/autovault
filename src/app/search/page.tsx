@@ -19,6 +19,8 @@ import {
   X,
 } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+
 const ITEMS_PER_PAGE = 10;
 
 const STORAGE_TYPE_LABELS: Record<StorageType, string> = {

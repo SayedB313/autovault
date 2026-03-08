@@ -15,6 +15,8 @@ import { prisma } from "@/lib/db";
 import { FacilityCard } from "@/components/facility-card";
 import { Button } from "@/components/ui/button";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title:
     "Luxury Car Storage - Climate Controlled, High Security | AutoVault",

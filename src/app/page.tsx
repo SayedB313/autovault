@@ -17,6 +17,8 @@ import { SearchBar } from "@/components/search-bar";
 import { FacilityCard } from "@/components/facility-card";
 import { Button } from "@/components/ui/button";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "AutoVault - Find Car Storage Near You | 2,000+ Facilities Nationwide",
   description:

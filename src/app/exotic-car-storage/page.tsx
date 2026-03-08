@@ -4,6 +4,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Shield, Thermometer, Lock, Eye } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Exotic Car Storage | Climate-Controlled Facilities | AutoVault",
   description:
