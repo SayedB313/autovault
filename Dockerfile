@@ -27,7 +27,8 @@ COPY . .
 ENV DATABASE_URL="postgresql://build:build@localhost:5432/build"
 RUN npx prisma generate
 
-RUN ls -la src/generated/prisma/ && cat src/generated/prisma/index.ts | head -5
+# Create barrel export (Prisma 7 doesn't auto-generate index.ts)
+RUN echo 'export * from "./client"; export * from "./enums";' > src/generated/prisma/index.ts
 
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
