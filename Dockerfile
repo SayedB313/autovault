@@ -25,6 +25,11 @@ COPY . .
 ENV DATABASE_URL="postgresql://build:build@localhost:5432/build"
 RUN npx prisma generate
 
+# Debug: verify files exist before build
+RUN ls -la node_modules/@tailwindcss/postcss/package.json && \
+    ls -la src/generated/prisma/index.ts && \
+    echo "All files verified"
+
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
 
