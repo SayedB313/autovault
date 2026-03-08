@@ -32,8 +32,30 @@ export default async function BlogPostPage({
 
   if (!post) notFound();
 
+  // Article JSON-LD structured data (server-generated content, safe for dangerouslySetInnerHTML)
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.title,
+    description: post.metaDescription || post.excerpt || "",
+    datePublished: post.publishedAt?.toISOString(),
+    dateModified: post.updatedAt.toISOString(),
+    author: { "@type": "Organization", name: "AutoVault" },
+    publisher: {
+      "@type": "Organization",
+      name: "AutoVault",
+      url: "https://autovault.network",
+    },
+    mainEntityOfPage: `https://autovault.network/blog/${slug}`,
+    ...(post.coverImage ? { image: post.coverImage } : {}),
+  };
+
   return (
     <article className="max-w-3xl mx-auto px-4 py-12">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
       <nav className="text-sm text-muted-foreground mb-6">
         <Link href="/" className="hover:underline">Home</Link>
         {" / "}
