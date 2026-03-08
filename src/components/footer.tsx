@@ -17,17 +17,17 @@ const FOOTER_COLUMNS = [
       { label: "Indoor Storage", href: "/search?storageType=INDOOR" },
       { label: "Outdoor Storage", href: "/search?storageType=OUTDOOR" },
       { label: "Climate Controlled", href: "/search?storageType=CLIMATE_CONTROLLED" },
-      { label: "Luxury Storage", href: "/luxury" },
+      { label: "Luxury Storage", href: "/luxury-car-storage" },
     ],
   },
   {
     title: "Top Cities",
     links: [
-      { label: "Los Angeles", href: "/california/los-angeles" },
-      { label: "Miami", href: "/florida/miami" },
-      { label: "New York", href: "/new-york/new-york" },
-      { label: "Houston", href: "/texas/houston" },
-      { label: "Chicago", href: "/illinois/chicago" },
+      { label: "Los Angeles", href: "/california/los-angeles-ca" },
+      { label: "Miami", href: "/florida/miami-fl" },
+      { label: "New York", href: "/new-york/new-york-ny" },
+      { label: "Houston", href: "/texas/houston-tx" },
+      { label: "Chicago", href: "/illinois/chicago-il" },
     ],
   },
   {
