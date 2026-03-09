@@ -309,7 +309,7 @@ async function main() {
             gen_random_uuid(), $1, $2, $3, $4, $5, $6, 'US',
             $7, $8, $9, $10, $11,
             $12, $13, $14::jsonb,
-            $15::"StorageType"[], $16::"VehicleType"[], $17::"Amenity"[], $18,
+            $15::"StorageType"[], $16::"VehicleType"[], $17::"Amenity"[], $18::"FacilityTier",
             NOW(), NOW()
           ) RETURNING id
         `, [
@@ -324,8 +324,8 @@ async function main() {
 
         if (photoUrl) {
           await db.query(`
-            INSERT INTO "Photo" (id, url, alt, "order", source, "facilityId", "createdAt", "updatedAt")
-            VALUES (gen_random_uuid(), $1, $2, 0, 'GOOGLE', $3, NOW(), NOW())
+            INSERT INTO "FacilityPhoto" (id, url, alt, "order", source, "facilityId", "createdAt")
+            VALUES (gen_random_uuid()::text, $1, $2, 0, 'GOOGLE'::"PhotoSource", $3, NOW())
           `, [photoUrl, `${p.name} - Photo 1`, facilityId]);
         }
 
