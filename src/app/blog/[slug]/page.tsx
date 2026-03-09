@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { breadcrumbJsonLd } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
@@ -13,9 +14,27 @@ export async function generateMetadata({
   const { slug } = await params;
   const post = await prisma.blogPost.findUnique({ where: { slug } });
   if (!post) return {};
+
+  const title = post.metaTitle || post.title;
+  const description = post.metaDescription || post.excerpt || undefined;
+
   return {
-    title: post.metaTitle || `${post.title} | AutoVault Blog`,
-    description: post.metaDescription || post.excerpt || undefined,
+    title,
+    description,
+    alternates: { canonical: `https://autovault.network/blog/${slug}` },
+    openGraph: {
+      title,
+      description,
+      type: "article",
+      siteName: "AutoVault",
+      ...(post.publishedAt ? { publishedTime: post.publishedAt.toISOString() } : {}),
+      modifiedTime: post.updatedAt.toISOString(),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
   };
 }
 
@@ -32,10 +51,10 @@ export default async function BlogPostPage({
 
   if (!post) notFound();
 
-  // Article JSON-LD structured data (server-generated content, safe for dangerouslySetInnerHTML)
+  // Server-generated SEO schema — safe for raw injection (no user input)
   const articleJsonLd = {
     "@context": "https://schema.org",
-    "@type": "Article",
+    "@type": "BlogPosting",
     headline: post.title,
     description: post.metaDescription || post.excerpt || "",
     datePublished: post.publishedAt?.toISOString(),
@@ -50,12 +69,23 @@ export default async function BlogPostPage({
     ...(post.coverImage ? { image: post.coverImage } : {}),
   };
 
+  const breadcrumbs = breadcrumbJsonLd([
+    { name: "Home", url: "https://autovault.network" },
+    { name: "Blog", url: "https://autovault.network/blog" },
+    { name: post.title },
+  ]);
+
   return (
     <article className="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-24">
-      {/* eslint-disable-next-line react/no-danger -- static server-generated SEO schema */}
+      {/* eslint-disable-next-line react/no-danger -- server-generated SEO schema */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
+      {/* eslint-disable-next-line react/no-danger -- server-generated SEO schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs) }}
       />
       <nav className="flex items-center gap-1.5 text-sm text-muted-foreground mb-10">
         <Link href="/" className="hover:text-foreground transition-colors">Home</Link>
@@ -92,6 +122,7 @@ export default async function BlogPostPage({
           For user-generated content, add DOMPurify sanitization. */}
       <div
         className="prose prose-lg prose-luxury max-w-none"
+        // eslint-disable-next-line react/no-danger -- admin-authored content from DB
         dangerouslySetInnerHTML={{ __html: post.content }}
       />
     </article>

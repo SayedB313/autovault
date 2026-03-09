@@ -5,15 +5,28 @@ import { Button } from "@/components/ui/button";
 import { FacilityCard } from "@/components/facility-card";
 import { AnimateOnScroll } from "@/components/animate-on-scroll";
 import { Shield, Thermometer, Lock, Eye, ArrowRight } from "lucide-react";
+import { breadcrumbJsonLd } from "@/lib/seo";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "Exotic Car Storage | Climate-Controlled Facilities | AutoVault",
+  title: "Exotic Car Storage | Climate-Controlled Facilities",
   description:
     "Find secure, climate-controlled exotic car storage near you. Purpose-built facilities for Ferrari, Lamborghini, Porsche, McLaren and more. Compare pricing and features.",
-  keywords:
-    "exotic car storage, supercar storage, Ferrari storage, Lamborghini storage, luxury vehicle storage, climate controlled car storage",
+  alternates: { canonical: "https://autovault.network/exotic-car-storage" },
+  openGraph: {
+    title: "Exotic Car Storage | Climate-Controlled Facilities",
+    description:
+      "Find secure, climate-controlled exotic car storage near you. Purpose-built facilities for Ferrari, Lamborghini, Porsche, McLaren and more.",
+    siteName: "AutoVault",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Exotic Car Storage | AutoVault",
+    description:
+      "Find secure, climate-controlled exotic car storage near you. Purpose-built facilities for Ferrari, Lamborghini, Porsche, McLaren and more.",
+  },
 };
 
 const FEATURES = [
@@ -55,8 +68,19 @@ export default async function ExoticCarStoragePage() {
     take: 12,
   });
 
+  const breadcrumbs = breadcrumbJsonLd([
+    { name: "Home", url: "https://autovault.network" },
+    { name: "Exotic Car Storage" },
+  ]);
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger -- server-generated SEO schema
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs) }}
+      />
+
       {/* Hero */}
       <section className="relative flex min-h-[60vh] items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,oklch(0.16_0_0)_0%,oklch(0.08_0_0)_70%)]" />

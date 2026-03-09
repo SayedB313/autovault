@@ -1,13 +1,13 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "The AutoVault Journal";
+export const alt = "Car Storage Facility";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const title = slug
+  const facilityName = slug
     .replace(/-/g, " ")
     .replace(/\b\w/g, (c) => c.toUpperCase());
 
@@ -26,29 +26,29 @@ export default async function Image({ params }: { params: Promise<{ slug: string
         }}
       >
         <div style={{ fontSize: 16, color: "#C4A35A", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase" as const, marginBottom: "20px" }}>
-          The AutoVault Journal
+          AutoVault
         </div>
         <div
           style={{
-            fontSize: title.length > 60 ? 36 : 48,
+            fontSize: facilityName.length > 40 ? 36 : 48,
             fontWeight: 300,
             color: "#F5F0EB",
             lineHeight: 1.2,
             maxWidth: "900px",
           }}
         >
-          {title}
+          {facilityName}
         </div>
         <div
           style={{
             width: "40px",
             height: "1px",
             background: "#C4A35A",
-            marginTop: "24px",
+            marginTop: "28px",
           }}
         />
-        <div style={{ fontSize: 16, color: "#9A9590", marginTop: "16px" }}>
-          autovault.network
+        <div style={{ fontSize: 18, color: "#9A9590", marginTop: "16px" }}>
+          Luxury Vehicle Storage · autovault.network
         </div>
       </div>
     ),

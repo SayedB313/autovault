@@ -61,6 +61,7 @@ function formatPrice(amount: number): string {
 
 type FacilityMetaInput = {
   name: string;
+  slug: string;
   city: string;
   state: string;
   description?: string | null;
@@ -83,7 +84,7 @@ export function generateFacilityMeta(facility: FacilityMetaInput): FacilityMetaR
 
   const ratingPart =
     facility.reviewCount > 0
-      ? ` ${facility.reviewCount} review${facility.reviewCount !== 1 ? "s" : ""}, ${facility.avgRating.toFixed(1)} avg rating.`
+      ? ` Rated ${facility.avgRating.toFixed(1)}/5 from ${facility.reviewCount} review${facility.reviewCount !== 1 ? "s" : ""}.`
       : "";
 
   const pricePart =
@@ -99,14 +100,20 @@ export function generateFacilityMeta(facility: FacilityMetaInput): FacilityMetaR
       ? `${storageDescriptors.join(", ")} storage`
       : "car storage";
 
-  const title = `${facility.name} - Car Storage in ${facility.city}, ${facility.state} | ${SITE_NAME}`;
+  const amenityPart =
+    vehicleDescriptors.length > 0
+      ? ` Accepts ${vehicleDescriptors.join(", ").toLowerCase()} vehicles.`
+      : "";
+
+  // Title WITHOUT site name — layout template appends "| AutoVault"
+  const title = `${facility.name} - Luxury Car Storage in ${facility.city}, ${facility.state}`;
 
   const description =
     facility.description?.slice(0, 160) ||
-    `${facility.name} offers ${storagePart} in ${facility.city}, ${stateName}.${ratingPart}${pricePart}`;
+    `${facility.name} offers ${storagePart} in ${facility.city}, ${stateName}.${ratingPart}${pricePart}${amenityPart}`.slice(0, 160);
 
   const keywords = [
-    "car storage",
+    "luxury car storage",
     `car storage ${facility.city}`,
     `vehicle storage ${facility.city} ${facility.state}`,
     facility.name,
@@ -115,15 +122,23 @@ export function generateFacilityMeta(facility: FacilityMetaInput): FacilityMetaR
     `${facility.city} ${facility.state}`,
   ];
 
+  const canonicalUrl = `${SITE_URL}/facility/${facility.slug}`;
+
   return {
     title,
     description,
     keywords,
+    alternates: { canonical: canonicalUrl },
     openGraph: {
-      title,
+      title: `${facility.name} - Car Storage in ${facility.city}, ${facility.state}`,
       description,
       siteName: SITE_NAME,
       type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${facility.name} - Car Storage in ${facility.city}, ${facility.state}`,
+      description,
     },
   };
 }
@@ -135,16 +150,25 @@ export function generateFacilityMeta(facility: FacilityMetaInput): FacilityMetaR
 export function generateCityMeta(
   city: string,
   state: string,
-  facilityCount: number
+  facilityCount: number,
+  citySlug?: string,
+  stateSlug?: string
 ): Metadata {
   const stateName = fullStateName(state);
-  const title = `Car Storage in ${city}, ${state} - ${facilityCount} Facilities | ${SITE_NAME}`;
-  const description = `Compare ${facilityCount} car storage facilit${facilityCount !== 1 ? "ies" : "y"} in ${city}, ${stateName}. Find indoor, outdoor, and climate controlled vehicle storage with reviews, pricing, and photos.`;
+  // Title WITHOUT site name — layout template appends "| AutoVault"
+  const title = `Car Storage in ${city}, ${state} - ${facilityCount} ${facilityCount !== 1 ? "Facilities" : "Facility"}`;
+  const description = `Compare ${facilityCount} luxury car storage ${facilityCount !== 1 ? "facilities" : "facility"} in ${city}, ${stateName}. Find climate-controlled, enclosed, and concierge vehicle storage with reviews, pricing, and photos.`;
+
+  const canonicalUrl = citySlug && stateSlug
+    ? `${SITE_URL}/${stateSlug}/${citySlug}`
+    : undefined;
 
   return {
     title,
     description,
-    openGraph: { title, description, siteName: SITE_NAME, type: "website" },
+    ...(canonicalUrl ? { alternates: { canonical: canonicalUrl } } : {}),
+    openGraph: { title: `Car Storage in ${city}, ${state}`, description, siteName: SITE_NAME, type: "website" },
+    twitter: { card: "summary_large_image", title: `Car Storage in ${city}, ${state}`, description },
   };
 }
 
@@ -155,16 +179,22 @@ export function generateCityMeta(
 export function generateStateMeta(
   state: string,
   cityCount: number,
-  facilityCount: number
+  facilityCount: number,
+  stateSlug?: string
 ): Metadata {
   const stateName = fullStateName(state);
-  const title = `Car Storage in ${stateName} - ${facilityCount} Facilities in ${cityCount} Cities | ${SITE_NAME}`;
-  const description = `Browse ${facilityCount} car storage facilit${facilityCount !== 1 ? "ies" : "y"} across ${cityCount} cit${cityCount !== 1 ? "ies" : "y"} in ${stateName}. Compare pricing, read reviews, and find the best vehicle storage near you.`;
+  // Title WITHOUT site name — layout template appends "| AutoVault"
+  const title = `Luxury Car Storage in ${stateName} - ${facilityCount} ${facilityCount !== 1 ? "Facilities" : "Facility"} in ${cityCount} ${cityCount !== 1 ? "Cities" : "City"}`;
+  const description = `Browse ${facilityCount} luxury car storage ${facilityCount !== 1 ? "facilities" : "facility"} across ${cityCount} ${cityCount !== 1 ? "cities" : "city"} in ${stateName}. Compare pricing, read reviews, and find the best vehicle storage near you.`;
+
+  const canonicalUrl = stateSlug ? `${SITE_URL}/${stateSlug}` : undefined;
 
   return {
     title,
     description,
-    openGraph: { title, description, siteName: SITE_NAME, type: "website" },
+    ...(canonicalUrl ? { alternates: { canonical: canonicalUrl } } : {}),
+    openGraph: { title: `Luxury Car Storage in ${stateName}`, description, siteName: SITE_NAME, type: "website" },
+    twitter: { card: "summary_large_image", title: `Car Storage in ${stateName}`, description },
   };
 }
 
@@ -201,7 +231,7 @@ export function facilityJsonLd(
     name: facility.name,
     description:
       facility.description ??
-      `Car storage facility in ${facility.city}, ${facility.state}`,
+      `Luxury car storage facility in ${facility.city}, ${facility.state}`,
     address: {
       "@type": "PostalAddress",
       streetAddress: facility.address,
@@ -271,27 +301,26 @@ export function cityJsonLd(
   return {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    name: `Car Storage Facilities in ${city}`,
+    name: `Luxury Car Storage Facilities in ${city}`,
     numberOfItems: facilities.length,
     itemListElement: facilities.map((f, i) => {
-      const listItem: Record<string, unknown> = {
-        "@type": "ListItem",
-        position: i + 1,
-        url: `${SITE_URL}/facility/${f.slug}`,
+      const item: Record<string, unknown> = {
+        "@type": "SelfStorage",
         name: f.name,
+        url: `${SITE_URL}/facility/${f.slug}`,
       };
       if (f.reviewCount > 0) {
-        listItem.item = {
-          "@type": "SelfStorage",
-          name: f.name,
-          aggregateRating: {
-            "@type": "AggregateRating",
-            ratingValue: f.avgRating,
-            reviewCount: f.reviewCount,
-          },
+        item.aggregateRating = {
+          "@type": "AggregateRating",
+          ratingValue: f.avgRating,
+          reviewCount: f.reviewCount,
         };
       }
-      return listItem;
+      return {
+        "@type": "ListItem",
+        position: i + 1,
+        item,
+      };
     }),
   };
 }

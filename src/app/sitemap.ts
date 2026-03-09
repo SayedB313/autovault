@@ -52,20 +52,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url: `${BASE_URL}/${c.stateSlug}/${c.slug}`,
     lastModified: c.updatedAt,
     changeFrequency: "weekly" as const,
-    priority: 0.6,
+    priority: 0.7,
   }));
 
-  // State pages
-  const states = await prisma.city.findMany({
-    select: { stateSlug: true },
-    distinct: ["stateSlug"],
-  });
+  // State pages — use most recent city update per state as lastmod
+  const stateLastDates = new Map<string, Date>();
+  for (const c of cities) {
+    const existing = stateLastDates.get(c.stateSlug);
+    if (!existing || c.updatedAt > existing) {
+      stateLastDates.set(c.stateSlug, c.updatedAt);
+    }
+  }
 
-  const statePages: MetadataRoute.Sitemap = states.map((s) => ({
-    url: `${BASE_URL}/${s.stateSlug}`,
-    lastModified: new Date(),
+  const statePages: MetadataRoute.Sitemap = Array.from(stateLastDates.entries()).map(([slug, date]) => ({
+    url: `${BASE_URL}/${slug}`,
+    lastModified: date,
     changeFrequency: "weekly" as const,
-    priority: 0.6,
+    priority: 0.7,
   }));
 
   // Blog posts

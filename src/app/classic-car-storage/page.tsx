@@ -5,15 +5,28 @@ import { Button } from "@/components/ui/button";
 import { FacilityCard } from "@/components/facility-card";
 import { AnimateOnScroll } from "@/components/animate-on-scroll";
 import { Gauge, Droplets, Wrench, FileCheck, ArrowRight } from "lucide-react";
+import { breadcrumbJsonLd } from "@/lib/seo";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "Classic Car Storage | Collector Vehicle Facilities | AutoVault",
+  title: "Classic Car Storage | Collector Vehicle Facilities",
   description:
     "Find specialized classic car storage and collector vehicle facilities near you. Climate-controlled, secure storage to preserve your vintage automobile's value.",
-  keywords:
-    "classic car storage, collector car storage, vintage car storage, antique car storage, museum car storage",
+  alternates: { canonical: "https://autovault.network/classic-car-storage" },
+  openGraph: {
+    title: "Classic Car Storage | Collector Vehicle Facilities",
+    description:
+      "Find specialized classic car storage and collector vehicle facilities near you. Climate-controlled, secure storage to preserve your vintage automobile's value.",
+    siteName: "AutoVault",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Classic Car Storage | AutoVault",
+    description:
+      "Find specialized classic car storage and collector vehicle facilities near you. Climate-controlled, secure storage to preserve your vintage automobile's value.",
+  },
 };
 
 const FEATURES = [
@@ -55,8 +68,19 @@ export default async function ClassicCarStoragePage() {
     take: 12,
   });
 
+  const breadcrumbs = breadcrumbJsonLd([
+    { name: "Home", url: "https://autovault.network" },
+    { name: "Classic Car Storage" },
+  ]);
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger -- server-generated SEO schema
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs) }}
+      />
+
       {/* Hero — warm tint for vintage feel */}
       <section className="relative flex min-h-[60vh] items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,oklch(0.20_0.03_85)_0%,oklch(0.08_0_0)_70%)]" />

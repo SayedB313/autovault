@@ -56,6 +56,10 @@ export const metadata: Metadata = {
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL || "https://autovault.network"
   ),
+  manifest: "/site.webmanifest",
+  other: {
+    "theme-color": "#0A0A0A",
+  },
 };
 
 export default function RootLayout({

@@ -3,23 +3,35 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Wrench, Shield, Battery, Car } from "lucide-react";
-import { faqPageJsonLd } from "@/lib/seo";
+import { faqPageJsonLd, breadcrumbJsonLd } from "@/lib/seo";
 
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "Ferrari Storage | Specialized Climate-Controlled Facilities | AutoVault",
+  title: "Ferrari Storage | Specialized Climate-Controlled Facilities",
   description:
     "Find specialized Ferrari storage facilities with climate control, battery conditioning, and expert handling. Protect your F40, 458, SF90, and more.",
-  keywords:
-    "Ferrari storage, Ferrari car storage, Ferrari F40 storage, Ferrari 458 storage, store my Ferrari, Ferrari climate controlled storage",
+  alternates: { canonical: "https://autovault.network/ferrari-storage" },
+  openGraph: {
+    title: "Ferrari Storage | Climate-Controlled Facilities",
+    description:
+      "Find specialized Ferrari storage facilities with climate control, battery conditioning, and expert handling. Protect your F40, 458, SF90, and more.",
+    siteName: "AutoVault",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Ferrari Storage | AutoVault",
+    description:
+      "Find specialized Ferrari storage with climate control, battery conditioning, and expert handling for your F40, 458, SF90, and more.",
+  },
 };
 
 const faqs = [
   {
     question: "What are the key storage requirements for a Ferrari?",
     answer:
-      "Ferrari storage requires precise climate control at 60-68°F with 45-55% relative humidity to protect delicate paint finishes, carbon fiber components, and advanced electronics. The engine should be started every 2-3 weeks and brought to full operating temperature to circulate fluids and prevent seal degradation. A quality battery tender is essential, especially for models with F1 gearboxes that rely on hydraulic pressure. Flush-floor entry protects the low front splitter, and UV-filtered lighting prevents paint and interior fading.",
+      "Ferrari storage requires precise climate control at 60-68\u00b0F with 45-55% relative humidity to protect delicate paint finishes, carbon fiber components, and advanced electronics. The engine should be started every 2-3 weeks and brought to full operating temperature to circulate fluids and prevent seal degradation. A quality battery tender is essential, especially for models with F1 gearboxes that rely on hydraulic pressure. Flush-floor entry protects the low front splitter, and UV-filtered lighting prevents paint and interior fading.",
   },
   {
     question: "How much does Ferrari storage cost per month?",
@@ -34,7 +46,7 @@ const faqs = [
   {
     question: "What is the ideal temperature for storing a Ferrari?",
     answer:
-      "The ideal temperature for Ferrari storage is 60-68°F (15-20°C) with relative humidity maintained at 45-55%. Temperature stability is critical -- fluctuations cause condensation that can damage Ferrari's sensitive Magneti Marelli electronics, corrode aluminum engine components, and degrade Bridgestone or Pirelli P Zero tires. Avoid storage below 50°F, as the hydraulic F1 gearbox fluid thickens and the Manettino system calibrations can drift in extreme cold.",
+      "The ideal temperature for Ferrari storage is 60-68\u00b0F (15-20\u00b0C) with relative humidity maintained at 45-55%. Temperature stability is critical \u2014 fluctuations cause condensation that can damage Ferrari's sensitive Magneti Marelli electronics, corrode aluminum engine components, and degrade Bridgestone or Pirelli P Zero tires. Avoid storage below 50\u00b0F, as the hydraulic F1 gearbox fluid thickens and the Manettino system calibrations can drift in extreme cold.",
   },
   {
     question: "Are there different storage needs for an F40 vs a modern Ferrari?",
@@ -61,96 +73,86 @@ export default async function FerrariStoragePage() {
     take: 12,
   });
 
-  const faqJsonLd = JSON.stringify(faqPageJsonLd(faqs));
+  const faqJsonLd = faqPageJsonLd(faqs);
+  const breadcrumbs = breadcrumbJsonLd([
+    { name: "Home", url: "https://autovault.network" },
+    { name: "Ferrari Storage" },
+  ]);
 
   return (
     <div>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: faqJsonLd }}
+        // eslint-disable-next-line react/no-danger -- server-generated SEO schema
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger -- server-generated SEO schema
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs) }}
       />
 
       {/* Hero */}
-      <section className="bg-gradient-to-b from-red-900 to-red-800 text-white py-20">
-        <div className="max-w-5xl mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+      <section className="relative overflow-hidden py-20 sm:py-28">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,oklch(0.18_0.03_25)_0%,oklch(0.08_0_0)_70%)]" />
+        <div className="relative max-w-5xl mx-auto px-4 text-center">
+          <p className="mb-6 text-xs font-medium uppercase tracking-[0.3em] text-primary">
+            Specialized Storage
+          </p>
+          <h1 className="font-serif text-4xl font-light tracking-tight text-foreground md:text-5xl">
             Ferrari Storage
           </h1>
-          <p className="text-lg text-red-200 max-w-2xl mx-auto mb-8">
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto mt-6 leading-relaxed">
             Specialized facilities that understand the unique requirements of
             Ferrari ownership. From air-cooled classics to modern hybrids, find
             storage that protects your investment.
           </p>
-          <Link href="/search?vehicleType=EXOTIC&storageType=CLIMATE_CONTROLLED">
-            <Button size="lg" className="bg-white text-red-900 hover:bg-red-50">
-              Find Ferrari Storage Near You
-            </Button>
-          </Link>
+          <div className="mt-10">
+            <Link href="/search?vehicleType=EXOTIC&storageType=CLIMATE_CONTROLLED">
+              <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold px-8">
+                Find Ferrari Storage Near You
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
 
       {/* Features */}
-      <section className="py-16 max-w-5xl mx-auto px-4">
-        <h2 className="text-2xl font-bold text-center mb-12">
+      <section className="py-20 max-w-5xl mx-auto px-4">
+        <h2 className="font-serif text-3xl font-light text-center text-foreground mb-14">
           Ferrari-Specific Storage Requirements
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          <div className="text-center">
-            <div className="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center mx-auto mb-4">
-              <Wrench className="h-6 w-6 text-red-600" />
+          {[
+            { icon: Wrench, title: "Engine Start Protocol", desc: "Every 2-3 weeks with full operating temperature reached to circulate oil, exercise F1 hydraulics, and prevent seal dry-out." },
+            { icon: Shield, title: "Carbon Fiber Care", desc: "UV protection and humidity maintained at 45-55% to preserve carbon fiber body panels, splitters, and interior trim from degradation." },
+            { icon: Battery, title: "Battery Management", desc: "F1 battery tender for modern models with automated manual gearboxes. Hybrid system state-of-charge management for SF90 and 296 models." },
+            { icon: Car, title: "Flush-Floor Entry", desc: "Level-entry bays protect the low ground clearance of Ferrari front splitters. No ramps or steep transitions that risk undercarriage damage." },
+          ].map((item) => (
+            <div key={item.title} className="text-center">
+              <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                <item.icon className="size-6 text-primary" />
+              </div>
+              <h3 className="font-semibold text-foreground mb-2">{item.title}</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {item.desc}
+              </p>
             </div>
-            <h3 className="font-semibold mb-2">Engine Start Protocol</h3>
-            <p className="text-sm text-muted-foreground">
-              Every 2-3 weeks with full operating temperature reached to
-              circulate oil, exercise F1 hydraulics, and prevent seal dry-out.
-            </p>
-          </div>
-          <div className="text-center">
-            <div className="w-12 h-12 rounded-full bg-amber-50 flex items-center justify-center mx-auto mb-4">
-              <Shield className="h-6 w-6 text-amber-600" />
-            </div>
-            <h3 className="font-semibold mb-2">Carbon Fiber Care</h3>
-            <p className="text-sm text-muted-foreground">
-              UV protection and humidity maintained at 45-55% to preserve carbon
-              fiber body panels, splitters, and interior trim from degradation.
-            </p>
-          </div>
-          <div className="text-center">
-            <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center mx-auto mb-4">
-              <Battery className="h-6 w-6 text-blue-600" />
-            </div>
-            <h3 className="font-semibold mb-2">Battery Management</h3>
-            <p className="text-sm text-muted-foreground">
-              F1 battery tender for modern models with automated manual
-              gearboxes. Hybrid system state-of-charge management for SF90 and
-              296 models.
-            </p>
-          </div>
-          <div className="text-center">
-            <div className="w-12 h-12 rounded-full bg-green-50 flex items-center justify-center mx-auto mb-4">
-              <Car className="h-6 w-6 text-green-600" />
-            </div>
-            <h3 className="font-semibold mb-2">Flush-Floor Entry</h3>
-            <p className="text-sm text-muted-foreground">
-              Level-entry bays protect the low ground clearance of Ferrari front
-              splitters. No ramps or steep transitions that risk undercarriage
-              damage.
-            </p>
-          </div>
+          ))}
         </div>
       </section>
 
       {/* Facilities */}
       {facilities.length > 0 && (
-        <section className="py-16 bg-zinc-50">
+        <section className="py-20 bg-card">
           <div className="max-w-7xl mx-auto px-4">
-            <h2 className="text-2xl font-bold mb-8">
+            <h2 className="font-serif text-3xl font-light text-foreground mb-10">
               Ferrari Storage Facilities
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {facilities.map((f) => (
                 <Link key={f.id} href={`/facility/${f.slug}`}>
-                  <div className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                  <div className="bg-background rounded-xl overflow-hidden ring-1 ring-border hover:ring-primary/30 transition-all">
                     <div
                       className="h-48 bg-muted bg-cover bg-center"
                       style={{
@@ -160,13 +162,13 @@ export default async function FerrariStoragePage() {
                       }}
                     />
                     <div className="p-4">
-                      <h3 className="font-semibold truncate">{f.name}</h3>
+                      <h3 className="font-semibold text-foreground truncate">{f.name}</h3>
                       <p className="text-sm text-muted-foreground">
                         {f.city}, {f.state}
                       </p>
                       {f.avgRating > 0 && (
                         <p className="text-sm mt-1">
-                          <span className="text-yellow-500">★</span> {f.avgRating.toFixed(1)}
+                          <span className="text-primary">&#9733;</span> {f.avgRating.toFixed(1)}
                           <span className="text-muted-foreground"> ({f.reviewCount})</span>
                         </p>
                       )}
@@ -175,7 +177,7 @@ export default async function FerrariStoragePage() {
                 </Link>
               ))}
             </div>
-            <div className="text-center mt-8">
+            <div className="text-center mt-10">
               <Link href="/search?vehicleType=EXOTIC&storageType=CLIMATE_CONTROLLED">
                 <Button variant="outline">View All Ferrari Storage</Button>
               </Link>
@@ -185,16 +187,17 @@ export default async function FerrariStoragePage() {
       )}
 
       {/* FAQ Section */}
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4 max-w-4xl">
-          <h2 className="text-3xl font-bold text-center mb-10">
+      <section className="py-20">
+        <div className="mx-auto px-4 max-w-4xl">
+          <div className="mx-auto mb-8 h-px w-12 bg-primary" />
+          <h2 className="font-serif text-3xl font-light text-center text-foreground mb-12">
             Frequently Asked Questions
           </h2>
-          <div className="space-y-6">
+          <div className="space-y-4">
             {faqs.map((faq, i) => (
-              <div key={i} className="bg-white rounded-lg p-6 shadow-sm">
-                <h3 className="text-lg font-semibold mb-3">{faq.question}</h3>
-                <p className="text-gray-600 leading-relaxed">{faq.answer}</p>
+              <div key={i} className="bg-card rounded-xl p-6 ring-1 ring-border">
+                <h3 className="text-lg font-semibold text-foreground mb-3">{faq.question}</h3>
+                <p className="text-muted-foreground leading-relaxed">{faq.answer}</p>
               </div>
             ))}
           </div>
@@ -202,17 +205,21 @@ export default async function FerrariStoragePage() {
       </section>
 
       {/* CTA */}
-      <section className="py-16 max-w-3xl mx-auto px-4 text-center">
-        <h2 className="text-2xl font-bold mb-4">
-          Own a Ferrari Storage Facility?
-        </h2>
-        <p className="text-muted-foreground mb-6">
-          List your facility on AutoVault and reach thousands of Ferrari owners
-          searching for premium storage.
-        </p>
-        <Link href="/pricing">
-          <Button>List Your Facility</Button>
-        </Link>
+      <section className="py-20 bg-card">
+        <div className="max-w-3xl mx-auto px-4 text-center">
+          <h2 className="font-serif text-3xl font-light text-foreground mb-4">
+            Own a Ferrari Storage Facility?
+          </h2>
+          <p className="text-muted-foreground mb-8 leading-relaxed">
+            List your facility on AutoVault and reach thousands of Ferrari owners
+            searching for premium storage.
+          </p>
+          <Link href="/pricing">
+            <Button className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold px-8">
+              List Your Facility
+            </Button>
+          </Link>
+        </div>
       </section>
     </div>
   );

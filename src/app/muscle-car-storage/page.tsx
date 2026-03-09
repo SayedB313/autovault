@@ -3,16 +3,28 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Chrome, Cog, Thermometer, CalendarRange } from "lucide-react";
-import { faqPageJsonLd } from "@/lib/seo";
+import { faqPageJsonLd, breadcrumbJsonLd } from "@/lib/seo";
 
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "Muscle Car Storage | Secure Facilities for American Performance | AutoVault",
+  title: "Muscle Car Storage | Secure Facilities for American Performance",
   description:
     "Find secure muscle car storage for Corvette, Camaro, Mustang, Challenger, and more. Climate-controlled facilities to preserve your American performance car.",
-  keywords:
-    "muscle car storage, Corvette storage, Camaro storage, Mustang storage, Challenger storage, American muscle car storage, performance car storage",
+  alternates: { canonical: "https://autovault.network/muscle-car-storage" },
+  openGraph: {
+    title: "Muscle Car Storage | Secure Facilities for American Performance",
+    description:
+      "Find secure muscle car storage for Corvette, Camaro, Mustang, Challenger, and more. Climate-controlled facilities to preserve your American performance car.",
+    siteName: "AutoVault",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Muscle Car Storage | AutoVault",
+    description:
+      "Find secure muscle car storage for Corvette, Camaro, Mustang, Challenger, and more. Climate-controlled facilities to preserve your American performance car.",
+  },
 };
 
 const faqs = [
@@ -60,90 +72,86 @@ export default async function MuscleCarStoragePage() {
     take: 12,
   });
 
+  const faqJsonLd = faqPageJsonLd(faqs);
+  const breadcrumbs = breadcrumbJsonLd([
+    { name: "Home", url: "https://autovault.network" },
+    { name: "Muscle Car Storage" },
+  ]);
+
   return (
     <div>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(faqPageJsonLd(faqs)),
-        }}
+        // eslint-disable-next-line react/no-danger -- server-generated SEO schema
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger -- server-generated SEO schema
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs) }}
       />
 
       {/* Hero */}
-      <section className="bg-gradient-to-b from-zinc-900 to-zinc-800 text-white py-20">
-        <div className="max-w-5xl mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+      <section className="relative overflow-hidden py-20 sm:py-28">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,oklch(0.18_0.03_25)_0%,oklch(0.08_0_0)_70%)]" />
+        <div className="relative max-w-5xl mx-auto px-4 text-center">
+          <p className="mb-6 text-xs font-medium uppercase tracking-[0.3em] text-primary">
+            Specialized Storage
+          </p>
+          <h1 className="font-serif text-4xl font-light tracking-tight text-foreground md:text-5xl">
             Muscle Car Storage
           </h1>
-          <p className="text-lg text-zinc-300 max-w-2xl mx-auto mb-8">
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto mt-6 leading-relaxed">
             Purpose-built storage for America&apos;s iconic performance machines.
             Climate-controlled facilities that preserve chrome, paint, and engine
             performance.
           </p>
-          <Link href="/search?vehicleType=CLASSIC">
-            <Button size="lg" className="bg-white text-zinc-900 hover:bg-zinc-100">
-              Find Muscle Car Storage Near You
-            </Button>
-          </Link>
+          <div className="mt-10">
+            <Link href="/search?vehicleType=CLASSIC">
+              <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold px-8">
+                Find Muscle Car Storage Near You
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
 
       {/* Features */}
-      <section className="py-16 max-w-5xl mx-auto px-4">
-        <h2 className="text-2xl font-bold text-center mb-12">
+      <section className="py-20 max-w-5xl mx-auto px-4">
+        <h2 className="font-serif text-3xl font-light text-center text-foreground mb-14">
           What to Look For in Muscle Car Storage
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          <div className="text-center">
-            <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center mx-auto mb-4">
-              <Chrome className="h-6 w-6 text-blue-600" />
+          {[
+            { icon: Chrome, title: "Chrome Protection", desc: "Controlled humidity prevents chrome pitting and oxidation on bumpers, trim, and emblems." },
+            { icon: Cog, title: "Engine Preservation", desc: "Periodic engine starts, fluid circulation, and fogging services keep powertrains ready to run." },
+            { icon: Thermometer, title: "Climate Control", desc: "Consistent temperature and humidity prevents paint oxidation, interior cracking, and rubber dry rot." },
+            { icon: CalendarRange, title: "Seasonal Storage", desc: "Winter storage programs with intake prep, periodic starts, and spring de-winterization service." },
+          ].map((item) => (
+            <div key={item.title} className="text-center">
+              <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                <item.icon className="size-6 text-primary" />
+              </div>
+              <h3 className="font-semibold text-foreground mb-2">{item.title}</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {item.desc}
+              </p>
             </div>
-            <h3 className="font-semibold mb-2">Chrome Protection</h3>
-            <p className="text-sm text-muted-foreground">
-              Controlled humidity prevents chrome pitting and oxidation on bumpers, trim, and emblems.
-            </p>
-          </div>
-          <div className="text-center">
-            <div className="w-12 h-12 rounded-full bg-green-50 flex items-center justify-center mx-auto mb-4">
-              <Cog className="h-6 w-6 text-green-600" />
-            </div>
-            <h3 className="font-semibold mb-2">Engine Preservation</h3>
-            <p className="text-sm text-muted-foreground">
-              Periodic engine starts, fluid circulation, and fogging services keep powertrains ready to run.
-            </p>
-          </div>
-          <div className="text-center">
-            <div className="w-12 h-12 rounded-full bg-amber-50 flex items-center justify-center mx-auto mb-4">
-              <Thermometer className="h-6 w-6 text-amber-600" />
-            </div>
-            <h3 className="font-semibold mb-2">Climate Control</h3>
-            <p className="text-sm text-muted-foreground">
-              Consistent temperature and humidity prevents paint oxidation, interior cracking, and rubber dry rot.
-            </p>
-          </div>
-          <div className="text-center">
-            <div className="w-12 h-12 rounded-full bg-purple-50 flex items-center justify-center mx-auto mb-4">
-              <CalendarRange className="h-6 w-6 text-purple-600" />
-            </div>
-            <h3 className="font-semibold mb-2">Seasonal Storage</h3>
-            <p className="text-sm text-muted-foreground">
-              Winter storage programs with intake prep, periodic starts, and spring de-winterization service.
-            </p>
-          </div>
+          ))}
         </div>
       </section>
 
       {/* Facilities */}
       {facilities.length > 0 && (
-        <section className="py-16 bg-zinc-50">
+        <section className="py-20 bg-card">
           <div className="max-w-7xl mx-auto px-4">
-            <h2 className="text-2xl font-bold mb-8">
+            <h2 className="font-serif text-3xl font-light text-foreground mb-10">
               Muscle Car Storage Facilities
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {facilities.map((f) => (
                 <Link key={f.id} href={`/facility/${f.slug}`}>
-                  <div className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                  <div className="bg-background rounded-xl overflow-hidden ring-1 ring-border hover:ring-primary/30 transition-all">
                     <div
                       className="h-48 bg-muted bg-cover bg-center"
                       style={{
@@ -153,13 +161,13 @@ export default async function MuscleCarStoragePage() {
                       }}
                     />
                     <div className="p-4">
-                      <h3 className="font-semibold truncate">{f.name}</h3>
+                      <h3 className="font-semibold text-foreground truncate">{f.name}</h3>
                       <p className="text-sm text-muted-foreground">
                         {f.city}, {f.state}
                       </p>
                       {f.avgRating > 0 && (
                         <p className="text-sm mt-1">
-                          <span className="text-yellow-500">★</span> {f.avgRating.toFixed(1)}
+                          <span className="text-primary">&#9733;</span> {f.avgRating.toFixed(1)}
                           <span className="text-muted-foreground"> ({f.reviewCount})</span>
                         </p>
                       )}
@@ -168,7 +176,7 @@ export default async function MuscleCarStoragePage() {
                 </Link>
               ))}
             </div>
-            <div className="text-center mt-8">
+            <div className="text-center mt-10">
               <Link href="/search?vehicleType=CLASSIC">
                 <Button variant="outline">View All Muscle Car Storage</Button>
               </Link>
@@ -178,16 +186,17 @@ export default async function MuscleCarStoragePage() {
       )}
 
       {/* FAQ Section */}
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4 max-w-4xl">
-          <h2 className="text-3xl font-bold text-center mb-10">
+      <section className="py-20">
+        <div className="mx-auto px-4 max-w-4xl">
+          <div className="mx-auto mb-8 h-px w-12 bg-primary" />
+          <h2 className="font-serif text-3xl font-light text-center text-foreground mb-12">
             Frequently Asked Questions
           </h2>
-          <div className="space-y-6">
+          <div className="space-y-4">
             {faqs.map((faq, i) => (
-              <div key={i} className="bg-white rounded-lg p-6 shadow-sm">
-                <h3 className="text-lg font-semibold mb-3">{faq.question}</h3>
-                <p className="text-gray-600 leading-relaxed">{faq.answer}</p>
+              <div key={i} className="bg-card rounded-xl p-6 ring-1 ring-border">
+                <h3 className="text-lg font-semibold text-foreground mb-3">{faq.question}</h3>
+                <p className="text-muted-foreground leading-relaxed">{faq.answer}</p>
               </div>
             ))}
           </div>
@@ -195,17 +204,21 @@ export default async function MuscleCarStoragePage() {
       </section>
 
       {/* CTA */}
-      <section className="py-16 max-w-3xl mx-auto px-4 text-center">
-        <h2 className="text-2xl font-bold mb-4">
-          Own a Muscle Car Storage Facility?
-        </h2>
-        <p className="text-muted-foreground mb-6">
-          List your facility on AutoVault and reach thousands of muscle car
-          enthusiasts searching for secure, climate-controlled storage.
-        </p>
-        <Link href="/pricing">
-          <Button>List Your Facility</Button>
-        </Link>
+      <section className="py-20 bg-card">
+        <div className="max-w-3xl mx-auto px-4 text-center">
+          <h2 className="font-serif text-3xl font-light text-foreground mb-4">
+            Own a Muscle Car Storage Facility?
+          </h2>
+          <p className="text-muted-foreground mb-8 leading-relaxed">
+            List your facility on AutoVault and reach thousands of muscle car
+            enthusiasts searching for secure, climate-controlled storage.
+          </p>
+          <Link href="/pricing">
+            <Button className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold px-8">
+              List Your Facility
+            </Button>
+          </Link>
+        </div>
       </section>
     </div>
   );

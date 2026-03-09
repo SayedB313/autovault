@@ -18,19 +18,29 @@ import { SearchBar } from "@/components/search-bar";
 import { FacilityCard } from "@/components/facility-card";
 import { AnimateOnScroll } from "@/components/animate-on-scroll";
 import { Button } from "@/components/ui/button";
+import { organizationJsonLd } from "@/lib/seo";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "AutoVault - The World's Premier Luxury Vehicle Storage Directory",
+  title: {
+    absolute: "AutoVault | The World's Premier Luxury Vehicle Storage Directory",
+  },
   description:
     "Find and compare luxury, exotic, and collector car storage facilities worldwide. Climate-controlled, concierge-level storage for Ferrari, Lamborghini, Porsche, and high-end vehicles.",
+  alternates: { canonical: "https://autovault.network" },
   openGraph: {
-    title: "AutoVault - Luxury Vehicle Storage Directory",
+    title: "AutoVault | The World's Premier Luxury Vehicle Storage Directory",
     description:
       "The global directory for luxury, exotic, and collector car storage. Climate-controlled, concierge-level facilities worldwide.",
     siteName: "AutoVault",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "AutoVault | Luxury Vehicle Storage Directory",
+    description:
+      "The global directory for luxury, exotic, and collector car storage. Climate-controlled, concierge-level facilities worldwide.",
   },
 };
 
@@ -106,7 +116,7 @@ export default async function HomePage() {
     }),
   ]);
 
-  /* JSON-LD: server-generated static schema — safe for raw injection */
+  const orgJsonLd = organizationJsonLd();
   const websiteJsonLd = {
     "@context": "https://schema.org",
     "@type": "WebSite",
@@ -125,10 +135,15 @@ export default async function HomePage() {
 
   return (
     <>
+      {/* eslint-disable-next-line react/no-danger -- static server-generated SEO schema */}
       <script
         type="application/ld+json"
-        // eslint-disable-next-line react/no-danger -- static server-generated SEO schema
         dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+      />
+      {/* eslint-disable-next-line react/no-danger -- static server-generated SEO schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
       />
 
       {/* ── Hero Section ── */}

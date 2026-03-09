@@ -10,6 +10,13 @@ import { SearchBar } from "@/components/search-bar";
 
 export const revalidate = 3600;
 
+export async function generateStaticParams() {
+  const cities = await prisma.city.findMany({
+    select: { slug: true, stateSlug: true },
+  });
+  return cities.map((c) => ({ state: c.stateSlug, city: c.slug }));
+}
+
 interface CityPageProps {
   params: Promise<{ state: string; city: string }>;
 }
@@ -64,7 +71,9 @@ export async function generateMetadata({
   return generateCityMeta(
     data.city.name,
     data.stateInfo.abbreviation,
-    data.facilities.length
+    data.facilities.length,
+    data.city.slug,
+    data.stateInfo.slug
   );
 }
 
@@ -234,19 +243,19 @@ export default async function CityPage({ params }: CityPageProps) {
         {nearbyCities.length > 0 && (
           <div className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
             <section className="mt-12">
-              <h2 className="text-2xl font-bold mb-6">
-                More Car Storage in {stateInfo.name}
+              <h2 className="font-serif text-2xl font-light mb-6 text-foreground">
+                More Luxury Car Storage in {stateInfo.name}
               </h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {nearbyCities.map((nc) => (
                   <Link
                     key={nc.slug}
                     href={`/${nc.stateSlug}/${nc.slug}`}
-                    className="block p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                    className="block p-4 bg-card rounded-lg ring-1 ring-border hover:ring-primary/30 transition-all"
                   >
-                    <p className="font-medium">{nc.name}</p>
-                    <p className="text-sm text-gray-500">
-                      {nc.facilityCount} facilit{nc.facilityCount !== 1 ? "ies" : "y"}
+                    <p className="font-medium text-foreground">{nc.name}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {nc.facilityCount} {nc.facilityCount !== 1 ? "facilities" : "facility"}
                     </p>
                   </Link>
                 ))}

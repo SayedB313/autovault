@@ -15,20 +15,27 @@ import { prisma } from "@/lib/db";
 import { FacilityCard } from "@/components/facility-card";
 import { AnimateOnScroll } from "@/components/animate-on-scroll";
 import { Button } from "@/components/ui/button";
+import { breadcrumbJsonLd } from "@/lib/seo";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title:
-    "Luxury Car Storage - Climate Controlled, High Security | AutoVault",
+  title: "Luxury Car Storage - Climate Controlled, High Security",
   description:
     "Find premium luxury car storage facilities for exotic, classic, and collector vehicles. Climate-controlled environments with concierge service, 24/7 security, and white-glove care.",
+  alternates: { canonical: "https://autovault.network/luxury-car-storage" },
   openGraph: {
-    title: "Luxury Car Storage | AutoVault",
+    title: "Luxury Car Storage - Climate Controlled, High Security",
     description:
-      "Premium storage for exotic, classic, and collector vehicles. Climate-controlled, concierge service, and 24/7 security.",
+      "Find premium luxury car storage facilities for exotic, classic, and collector vehicles. Climate-controlled environments with concierge service, 24/7 security, and white-glove care.",
     siteName: "AutoVault",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Luxury Car Storage | AutoVault",
+    description:
+      "Find premium luxury car storage facilities for exotic, classic, and collector vehicles. Climate-controlled environments with concierge service, 24/7 security, and white-glove care.",
   },
 };
 
@@ -85,8 +92,19 @@ export default async function LuxuryCarStoragePage() {
     take: 6,
   });
 
+  const breadcrumbs = breadcrumbJsonLd([
+    { name: "Home", url: "https://autovault.network" },
+    { name: "Luxury Car Storage" },
+  ]);
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger -- server-generated SEO schema
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs) }}
+      />
+
       {/* Hero Section */}
       <section className="relative flex min-h-[70vh] items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,oklch(0.18_0.02_85)_0%,oklch(0.08_0_0)_70%)]" />

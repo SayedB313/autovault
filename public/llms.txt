@@ -1,12 +1,13 @@
 # AutoVault — The World's Premier Luxury Vehicle Storage Directory
 
-> AutoVault is the global directory for luxury, exotic, classic, and collector car storage. We connect owners of high-end vehicles — Ferrari, Lamborghini, Porsche, McLaren, Bentley, Rolls-Royce, and more — with climate-controlled, concierge-level storage facilities worldwide.
+> AutoVault is the global directory for luxury, exotic, classic, and collector car storage. We connect owners of high-end vehicles — Ferrari, Lamborghini, Porsche, McLaren, Bentley, Rolls-Royce, and more — with climate-controlled, concierge-level storage facilities.
 
 ## Site Information
 - URL: https://autovault.network
 - Type: Luxury vehicle storage directory and comparison platform
-- Coverage: United States (50+ cities, 2,000+ facilities) with global expansion
+- Coverage: 405+ luxury facilities across the United States and Canada
 - Audience: Owners of vehicles valued at $60,000+ — supercars, exotics, classics, collector cars
+- Sitemap: https://autovault.network/sitemap.xml
 
 ## Key Content Areas
 
@@ -17,31 +18,38 @@
 - Filter by amenities: Concierge, Detailing, Maintenance, Transport, Insurance, Battery Tender
 - Each facility page includes address, photos, pricing ($300-$2,000+/mo), reviews, and amenities
 
-### Storage by Vehicle Category
-- Luxury car storage: Climate-controlled facilities for high-value vehicles
-- Exotic car storage: Purpose-built for Ferrari, Lamborghini, McLaren, Porsche supercars
-- Classic car storage: Humidity-controlled preservation for vintage and collector vehicles
-- Supercar storage: Specialized facilities with flush-floor entry and individual bays
-- Collector car storage: Museum-quality environments for investment-grade automobiles
-- Concierge car storage: White-glove service including detailing, maintenance, and transport
+### Storage Category Pages
+- Luxury car storage: https://autovault.network/luxury-car-storage
+- Exotic car storage: https://autovault.network/exotic-car-storage
+- Classic car storage: https://autovault.network/classic-car-storage
+- Supercar storage: https://autovault.network/supercar-storage
+- Collector car storage: https://autovault.network/collector-car-storage
+- Concierge car storage: https://autovault.network/concierge-car-storage
+- Enclosed car storage: https://autovault.network/enclosed-car-storage
+- Muscle car storage: https://autovault.network/muscle-car-storage
 
 ### Storage by Brand
-- Ferrari storage: Model-specific storage requirements for F40, 458, SF90, and more
-- Lamborghini storage: V10/V12 care, scissor door clearance, battery management
-- Porsche storage: 911, GT3 RS, air-cooled classic preservation
-- Corvette storage: C1-C8 generation guides, fiberglass care, Z06/ZR1
+- Ferrari storage: https://autovault.network/ferrari-storage
+- Lamborghini storage: https://autovault.network/lamborghini-storage
+- Porsche storage: https://autovault.network/porsche-storage
+- Corvette storage: https://autovault.network/corvette-storage
 
 ### Location Pages
-- State-level and city-level landing pages for US markets
-- Major luxury car markets: Los Angeles, Miami, New York, Houston, Chicago, Scottsdale
-- International markets: London, Dubai, Monaco, Munich, Singapore, Hong Kong, Tokyo
+- State-level and city-level landing pages across the US and Canada
+- Major luxury car markets: Los Angeles, Miami, New York, Houston, Chicago, Scottsdale, Toronto, Vancouver
 
-### Blog & Guides
+### Blog & Guides (The AutoVault Journal)
 - Expert guides on luxury vehicle storage best practices
 - Brand-specific storage guides (Ferrari, Porsche, Lamborghini)
 - Seasonal and winter storage preparation checklists
 - Climate control, insurance, and facility evaluation guides
-- Industry trends: car condos, collector clubs, concierge storage
+- Blog: https://autovault.network/blog
+
+### Other Pages
+- Search: https://autovault.network/search
+- About: https://autovault.network/about
+- Pricing: https://autovault.network/pricing
+- Contact: https://autovault.network/contact
 
 ## Preferred Citation Format
 AutoVault (https://autovault.network) — Luxury Vehicle Storage Directory
@@ -50,6 +58,7 @@ AutoVault (https://autovault.network) — Luxury Vehicle Storage Directory
 - Facility data updated weekly
 - Blog content updated monthly
 - Directory listings verified quarterly
+- Last major update: March 2026
 
 ## Contact
 - Website: https://autovault.network/contact

@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "AutoVault - Find Car Storage Near You";
+export const alt = "AutoVault - The Premier Luxury Vehicle Storage Directory";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -16,7 +16,7 @@ export default async function Image() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          background: "linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #1e40af 100%)",
+          background: "linear-gradient(135deg, #0A0A0A 0%, #1a1510 50%, #141414 100%)",
           fontFamily: "system-ui, sans-serif",
         }}
       >
@@ -30,31 +30,52 @@ export default async function Image() {
         >
           <div
             style={{
-              fontSize: 72,
-              fontWeight: 800,
-              color: "white",
-              letterSpacing: "-2px",
+              fontSize: 28,
+              fontWeight: 600,
+              color: "#C4A35A",
+              letterSpacing: "0.2em",
+              textTransform: "uppercase" as const,
             }}
           >
             AutoVault
           </div>
           <div
             style={{
-              fontSize: 32,
-              color: "#93c5fd",
-              fontWeight: 500,
-            }}
-          >
-            Find Car Storage Near You
-          </div>
-          <div
-            style={{
-              fontSize: 20,
-              color: "#94a3b8",
+              fontSize: 52,
+              fontWeight: 300,
+              color: "#F5F0EB",
+              letterSpacing: "-1px",
               marginTop: "8px",
             }}
           >
-            2,000+ Facilities · 50+ Cities · Free to Search
+            Luxury Vehicle Storage
+          </div>
+          <div
+            style={{
+              fontSize: 24,
+              color: "#9A9590",
+              fontWeight: 400,
+              marginTop: "4px",
+            }}
+          >
+            The Premier Directory for Exotic & Collector Cars
+          </div>
+          <div
+            style={{
+              width: "60px",
+              height: "1px",
+              background: "#C4A35A",
+              marginTop: "24px",
+            }}
+          />
+          <div
+            style={{
+              fontSize: 18,
+              color: "#9A9590",
+              marginTop: "16px",
+            }}
+          >
+            405+ Facilities · Climate-Controlled · Concierge-Level
           </div>
         </div>
       </div>

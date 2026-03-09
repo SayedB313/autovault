@@ -25,10 +25,18 @@ export async function generateMetadata({
     where: { stateSlug: stateInfo.slug },
   });
 
-  return generateStateMeta(stateInfo.abbreviation, cityCount, facilityCount);
+  return generateStateMeta(stateInfo.abbreviation, cityCount, facilityCount, stateInfo.slug);
 }
 
 export const revalidate = 3600;
+
+export async function generateStaticParams() {
+  const states = await prisma.city.findMany({
+    select: { stateSlug: true },
+    distinct: ["stateSlug"],
+  });
+  return states.map((s) => ({ state: s.stateSlug }));
+}
 
 export default async function StatePage({ params }: StatePageProps) {
   const { state: stateSlug } = await params;
@@ -134,14 +142,14 @@ export default async function StatePage({ params }: StatePageProps) {
 
           {/* SEO Content Section */}
           <section className="mt-16 max-w-3xl mx-auto">
-            <h2 className="text-2xl font-bold mb-4">
-              Car Storage Options in {stateInfo.name}
+            <h2 className="font-serif text-2xl font-light mb-4 text-foreground">
+              Luxury Car Storage in {stateInfo.name}
             </h2>
-            <div className="prose prose-gray max-w-none space-y-4 text-gray-600">
+            <div className="max-w-none space-y-4 text-muted-foreground leading-relaxed">
               <p>
-                {stateInfo.name} offers {totalFacilities} car storage facilities across{" "}
-                {cities.length} cities, providing vehicle owners with a wide range of indoor,
-                outdoor, and climate-controlled storage solutions. Whether you need
+                {stateInfo.name} offers {totalFacilities} luxury car storage facilities across{" "}
+                {cities.length} cities, providing vehicle owners with climate-controlled,
+                enclosed, and concierge-level storage solutions. Whether you need
                 short-term parking during travel or long-term preservation for a classic
                 or exotic vehicle, AutoVault helps you find and compare the best options
                 in your area.
@@ -154,8 +162,8 @@ export default async function StatePage({ params }: StatePageProps) {
                 reviews, and contact facilities directly.
               </p>
               <p>
-                Browse our {stateInfo.name} city pages below to find car storage near you, or
-                use the <a href="/search" className="text-blue-600 hover:underline">search page</a> to
+                Browse our {stateInfo.name} city pages above to find car storage near you, or
+                use the <Link href="/search" className="text-primary hover:underline">search page</Link> to
                 filter by storage type, vehicle type, and amenities.
               </p>
             </div>

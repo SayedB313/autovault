@@ -1,13 +1,13 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "The AutoVault Journal";
+export const alt = "Luxury Car Storage Directory";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
-  const title = slug
+export default async function Image({ params }: { params: Promise<{ state: string }> }) {
+  const { state } = await params;
+  const stateName = state
     .replace(/-/g, " ")
     .replace(/\b\w/g, (c) => c.toUpperCase());
 
@@ -19,36 +19,31 @@ export default async function Image({ params }: { params: Promise<{ slug: string
           height: "100%",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "flex-end",
-          padding: "60px",
+          alignItems: "center",
+          justifyContent: "center",
           background: "linear-gradient(135deg, #0A0A0A 0%, #1a1510 50%, #141414 100%)",
           fontFamily: "system-ui, sans-serif",
         }}
       >
         <div style={{ fontSize: 16, color: "#C4A35A", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase" as const, marginBottom: "20px" }}>
-          The AutoVault Journal
+          AutoVault
         </div>
-        <div
-          style={{
-            fontSize: title.length > 60 ? 36 : 48,
-            fontWeight: 300,
-            color: "#F5F0EB",
-            lineHeight: 1.2,
-            maxWidth: "900px",
-          }}
-        >
-          {title}
+        <div style={{ fontSize: 52, fontWeight: 300, color: "#F5F0EB" }}>
+          Luxury Car Storage
+        </div>
+        <div style={{ fontSize: 36, color: "#9A9590", marginTop: "12px" }}>
+          {stateName}
         </div>
         <div
           style={{
             width: "40px",
             height: "1px",
             background: "#C4A35A",
-            marginTop: "24px",
+            marginTop: "28px",
           }}
         />
-        <div style={{ fontSize: 16, color: "#9A9590", marginTop: "16px" }}>
-          autovault.network
+        <div style={{ fontSize: 18, color: "#9A9590", marginTop: "20px" }}>
+          Climate-controlled · Concierge-level · Exotic & collector vehicles
         </div>
       </div>
     ),

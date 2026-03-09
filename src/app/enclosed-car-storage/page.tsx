@@ -3,16 +3,28 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { DoorOpen, ShieldCheck, Snowflake, KeyRound } from "lucide-react";
-import { faqPageJsonLd } from "@/lib/seo";
+import { faqPageJsonLd, breadcrumbJsonLd } from "@/lib/seo";
 
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "Enclosed Car Storage | Private Vehicle Bays & Garages | AutoVault",
+  title: "Enclosed Car Storage | Private Vehicle Bays & Garages",
   description:
     "Find enclosed car storage with private, individual vehicle bays. Full protection from dust, light, and climate for luxury, exotic, and collector vehicles.",
-  keywords:
-    "enclosed car storage, private car storage, individual car bay, private garage storage, enclosed vehicle storage, single car garage",
+  alternates: { canonical: "https://autovault.network/enclosed-car-storage" },
+  openGraph: {
+    title: "Enclosed Car Storage | Private Vehicle Bays & Garages",
+    description:
+      "Find enclosed car storage with private, individual vehicle bays. Full protection from dust, light, and climate for luxury, exotic, and collector vehicles.",
+    siteName: "AutoVault",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Enclosed Car Storage | AutoVault",
+    description:
+      "Find enclosed car storage with private, individual vehicle bays. Full protection from dust, light, and climate for luxury, exotic, and collector vehicles.",
+  },
 };
 
 const faqs = [
@@ -60,90 +72,86 @@ export default async function EnclosedCarStoragePage() {
     take: 12,
   });
 
+  const faqJsonLd = faqPageJsonLd(faqs);
+  const breadcrumbs = breadcrumbJsonLd([
+    { name: "Home", url: "https://autovault.network" },
+    { name: "Enclosed Car Storage" },
+  ]);
+
   return (
     <div>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(faqPageJsonLd(faqs)),
-        }}
+        // eslint-disable-next-line react/no-danger -- server-generated SEO schema
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger -- server-generated SEO schema
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs) }}
       />
 
       {/* Hero */}
-      <section className="bg-gradient-to-b from-zinc-900 to-zinc-800 text-white py-20">
-        <div className="max-w-5xl mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+      <section className="relative overflow-hidden py-20 sm:py-28">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,oklch(0.18_0.03_25)_0%,oklch(0.08_0_0)_70%)]" />
+        <div className="relative max-w-5xl mx-auto px-4 text-center">
+          <p className="mb-6 text-xs font-medium uppercase tracking-[0.3em] text-primary">
+            Specialized Storage
+          </p>
+          <h1 className="font-serif text-4xl font-light tracking-tight text-foreground md:text-5xl">
             Enclosed Car Storage
           </h1>
-          <p className="text-lg text-zinc-300 max-w-2xl mx-auto mb-8">
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto mt-6 leading-relaxed">
             Private, fully enclosed bays offering maximum protection. Your
             vehicle is isolated from dust, light, and other vehicles in its own
             dedicated space.
           </p>
-          <Link href="/search?storageType=ENCLOSED">
-            <Button size="lg" className="bg-white text-zinc-900 hover:bg-zinc-100">
-              Find Enclosed Storage Near You
-            </Button>
-          </Link>
+          <div className="mt-10">
+            <Link href="/search?storageType=ENCLOSED">
+              <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold px-8">
+                Find Enclosed Storage Near You
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
 
       {/* Features */}
-      <section className="py-16 max-w-5xl mx-auto px-4">
-        <h2 className="text-2xl font-bold text-center mb-12">
+      <section className="py-20 max-w-5xl mx-auto px-4">
+        <h2 className="font-serif text-3xl font-light text-center text-foreground mb-14">
           What to Look For in Enclosed Car Storage
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          <div className="text-center">
-            <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center mx-auto mb-4">
-              <DoorOpen className="h-6 w-6 text-blue-600" />
+          {[
+            { icon: DoorOpen, title: "Individual Bays", desc: "Private, walled units with dedicated doors give your vehicle its own isolated, secure space." },
+            { icon: ShieldCheck, title: "Dust & UV Protection", desc: "Solid walls and ceilings block dust, contaminants, and UV light that damage paint and interiors." },
+            { icon: Snowflake, title: "Climate Isolation", desc: "Individual climate zones maintain optimal temperature and humidity for each enclosed bay." },
+            { icon: KeyRound, title: "Private Access", desc: "Dedicated keys or access codes for your bay provide 24/7 entry without shared access concerns." },
+          ].map((item) => (
+            <div key={item.title} className="text-center">
+              <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                <item.icon className="size-6 text-primary" />
+              </div>
+              <h3 className="font-semibold text-foreground mb-2">{item.title}</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {item.desc}
+              </p>
             </div>
-            <h3 className="font-semibold mb-2">Individual Bays</h3>
-            <p className="text-sm text-muted-foreground">
-              Private, walled units with dedicated doors give your vehicle its own isolated, secure space.
-            </p>
-          </div>
-          <div className="text-center">
-            <div className="w-12 h-12 rounded-full bg-green-50 flex items-center justify-center mx-auto mb-4">
-              <ShieldCheck className="h-6 w-6 text-green-600" />
-            </div>
-            <h3 className="font-semibold mb-2">Dust & UV Protection</h3>
-            <p className="text-sm text-muted-foreground">
-              Solid walls and ceilings block dust, contaminants, and UV light that damage paint and interiors.
-            </p>
-          </div>
-          <div className="text-center">
-            <div className="w-12 h-12 rounded-full bg-amber-50 flex items-center justify-center mx-auto mb-4">
-              <Snowflake className="h-6 w-6 text-amber-600" />
-            </div>
-            <h3 className="font-semibold mb-2">Climate Isolation</h3>
-            <p className="text-sm text-muted-foreground">
-              Individual climate zones maintain optimal temperature and humidity for each enclosed bay.
-            </p>
-          </div>
-          <div className="text-center">
-            <div className="w-12 h-12 rounded-full bg-purple-50 flex items-center justify-center mx-auto mb-4">
-              <KeyRound className="h-6 w-6 text-purple-600" />
-            </div>
-            <h3 className="font-semibold mb-2">Private Access</h3>
-            <p className="text-sm text-muted-foreground">
-              Dedicated keys or access codes for your bay provide 24/7 entry without shared access concerns.
-            </p>
-          </div>
+          ))}
         </div>
       </section>
 
       {/* Facilities */}
       {facilities.length > 0 && (
-        <section className="py-16 bg-zinc-50">
+        <section className="py-20 bg-card">
           <div className="max-w-7xl mx-auto px-4">
-            <h2 className="text-2xl font-bold mb-8">
+            <h2 className="font-serif text-3xl font-light text-foreground mb-10">
               Enclosed Car Storage Facilities
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {facilities.map((f) => (
                 <Link key={f.id} href={`/facility/${f.slug}`}>
-                  <div className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                  <div className="bg-background rounded-xl overflow-hidden ring-1 ring-border hover:ring-primary/30 transition-all">
                     <div
                       className="h-48 bg-muted bg-cover bg-center"
                       style={{
@@ -153,13 +161,13 @@ export default async function EnclosedCarStoragePage() {
                       }}
                     />
                     <div className="p-4">
-                      <h3 className="font-semibold truncate">{f.name}</h3>
+                      <h3 className="font-semibold text-foreground truncate">{f.name}</h3>
                       <p className="text-sm text-muted-foreground">
                         {f.city}, {f.state}
                       </p>
                       {f.avgRating > 0 && (
                         <p className="text-sm mt-1">
-                          <span className="text-yellow-500">★</span> {f.avgRating.toFixed(1)}
+                          <span className="text-primary">&#9733;</span> {f.avgRating.toFixed(1)}
                           <span className="text-muted-foreground"> ({f.reviewCount})</span>
                         </p>
                       )}
@@ -168,7 +176,7 @@ export default async function EnclosedCarStoragePage() {
                 </Link>
               ))}
             </div>
-            <div className="text-center mt-8">
+            <div className="text-center mt-10">
               <Link href="/search?storageType=ENCLOSED">
                 <Button variant="outline">View All Enclosed Storage</Button>
               </Link>
@@ -178,16 +186,17 @@ export default async function EnclosedCarStoragePage() {
       )}
 
       {/* FAQ Section */}
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4 max-w-4xl">
-          <h2 className="text-3xl font-bold text-center mb-10">
+      <section className="py-20">
+        <div className="mx-auto px-4 max-w-4xl">
+          <div className="mx-auto mb-8 h-px w-12 bg-primary" />
+          <h2 className="font-serif text-3xl font-light text-center text-foreground mb-12">
             Frequently Asked Questions
           </h2>
-          <div className="space-y-6">
+          <div className="space-y-4">
             {faqs.map((faq, i) => (
-              <div key={i} className="bg-white rounded-lg p-6 shadow-sm">
-                <h3 className="text-lg font-semibold mb-3">{faq.question}</h3>
-                <p className="text-gray-600 leading-relaxed">{faq.answer}</p>
+              <div key={i} className="bg-card rounded-xl p-6 ring-1 ring-border">
+                <h3 className="text-lg font-semibold text-foreground mb-3">{faq.question}</h3>
+                <p className="text-muted-foreground leading-relaxed">{faq.answer}</p>
               </div>
             ))}
           </div>
@@ -195,17 +204,21 @@ export default async function EnclosedCarStoragePage() {
       </section>
 
       {/* CTA */}
-      <section className="py-16 max-w-3xl mx-auto px-4 text-center">
-        <h2 className="text-2xl font-bold mb-4">
-          Own an Enclosed Car Storage Facility?
-        </h2>
-        <p className="text-muted-foreground mb-6">
-          List your facility on AutoVault and reach thousands of vehicle owners
-          searching for private, enclosed storage solutions.
-        </p>
-        <Link href="/pricing">
-          <Button>List Your Facility</Button>
-        </Link>
+      <section className="py-20 bg-card">
+        <div className="max-w-3xl mx-auto px-4 text-center">
+          <h2 className="font-serif text-3xl font-light text-foreground mb-4">
+            Own an Enclosed Car Storage Facility?
+          </h2>
+          <p className="text-muted-foreground mb-8 leading-relaxed">
+            List your facility on AutoVault and reach thousands of vehicle owners
+            searching for private, enclosed storage solutions.
+          </p>
+          <Link href="/pricing">
+            <Button className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold px-8">
+              List Your Facility
+            </Button>
+          </Link>
+        </div>
       </section>
     </div>
   );

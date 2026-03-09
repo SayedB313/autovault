@@ -1,11 +1,13 @@
 {
-  "name": "AutoVault",
+  "name": "AutoVault — Luxury Vehicle Storage Directory",
   "short_name": "AutoVault",
-  "description": "Find and compare car storage facilities near you",
+  "description": "The global directory for luxury, exotic, classic, and collector car storage. Find climate-controlled, concierge-level facilities worldwide.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#1e40af",
+  "background_color": "#0A0A0A",
+  "theme_color": "#C4A35A",
+  "categories": ["business", "lifestyle"],
   "icons": [
     {
       "src": "/icon-192.png",

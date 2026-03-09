@@ -3,16 +3,28 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Sparkles, CalendarClock, Truck, BatteryCharging } from "lucide-react";
-import { faqPageJsonLd } from "@/lib/seo";
+import { faqPageJsonLd, breadcrumbJsonLd } from "@/lib/seo";
 
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "Concierge Car Storage | White-Glove Vehicle Care | AutoVault",
+  title: "Concierge Car Storage | White-Glove Vehicle Care",
   description:
     "Find concierge car storage with white-glove services. Detailing, maintenance scheduling, battery tending, transport coordination, and VIP access for luxury vehicle owners.",
-  keywords:
-    "concierge car storage, white glove car storage, valet car storage, luxury car concierge, car storage with detailing, car storage with maintenance",
+  alternates: { canonical: "https://autovault.network/concierge-car-storage" },
+  openGraph: {
+    title: "Concierge Car Storage | White-Glove Vehicle Care",
+    description:
+      "Find concierge car storage with white-glove services. Detailing, maintenance scheduling, battery tending, transport coordination, and VIP access for luxury vehicle owners.",
+    siteName: "AutoVault",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Concierge Car Storage | AutoVault",
+    description:
+      "Find concierge car storage with white-glove services. Detailing, maintenance scheduling, battery tending, transport coordination, and VIP access for luxury vehicle owners.",
+  },
 };
 
 const faqs = [
@@ -60,89 +72,85 @@ export default async function ConciergeCarStoragePage() {
     take: 12,
   });
 
+  const faqJsonLd = faqPageJsonLd(faqs);
+  const breadcrumbs = breadcrumbJsonLd([
+    { name: "Home", url: "https://autovault.network" },
+    { name: "Concierge Car Storage" },
+  ]);
+
   return (
     <div>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(faqPageJsonLd(faqs)),
-        }}
+        // eslint-disable-next-line react/no-danger -- server-generated SEO schema
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger -- server-generated SEO schema
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs) }}
       />
 
       {/* Hero */}
-      <section className="bg-gradient-to-b from-zinc-900 to-zinc-800 text-white py-20">
-        <div className="max-w-5xl mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+      <section className="relative overflow-hidden py-20 sm:py-28">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,oklch(0.18_0.03_25)_0%,oklch(0.08_0_0)_70%)]" />
+        <div className="relative max-w-5xl mx-auto px-4 text-center">
+          <p className="mb-6 text-xs font-medium uppercase tracking-[0.3em] text-primary">
+            Specialized Storage
+          </p>
+          <h1 className="font-serif text-4xl font-light tracking-tight text-foreground md:text-5xl">
             Concierge Car Storage
           </h1>
-          <p className="text-lg text-zinc-300 max-w-2xl mx-auto mb-8">
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto mt-6 leading-relaxed">
             White-glove storage where your vehicle is professionally maintained,
             detailed, and ready to drive at a moment&apos;s notice.
           </p>
-          <Link href="/search?amenity=CONCIERGE">
-            <Button size="lg" className="bg-white text-zinc-900 hover:bg-zinc-100">
-              Find Concierge Storage Near You
-            </Button>
-          </Link>
+          <div className="mt-10">
+            <Link href="/search?amenity=CONCIERGE">
+              <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold px-8">
+                Find Concierge Storage Near You
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
 
       {/* Features */}
-      <section className="py-16 max-w-5xl mx-auto px-4">
-        <h2 className="text-2xl font-bold text-center mb-12">
+      <section className="py-20 max-w-5xl mx-auto px-4">
+        <h2 className="font-serif text-3xl font-light text-center text-foreground mb-14">
           What to Look For in Concierge Car Storage
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          <div className="text-center">
-            <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center mx-auto mb-4">
-              <Sparkles className="h-6 w-6 text-blue-600" />
+          {[
+            { icon: Sparkles, title: "On-Demand Detailing", desc: "Professional interior and exterior detailing keeps your vehicle showroom-ready at all times." },
+            { icon: CalendarClock, title: "Maintenance Scheduling", desc: "Coordinated service appointments, fluid checks, and preventive maintenance with trusted mechanics." },
+            { icon: Truck, title: "Enclosed Transport", desc: "Door-to-door enclosed vehicle delivery to your home, airport, event, or any destination." },
+            { icon: BatteryCharging, title: "Battery Tending", desc: "Smart conditioners maintain optimal charge levels with periodic engine starts and system checks." },
+          ].map((item) => (
+            <div key={item.title} className="text-center">
+              <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                <item.icon className="size-6 text-primary" />
+              </div>
+              <h3 className="font-semibold text-foreground mb-2">{item.title}</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {item.desc}
+              </p>
             </div>
-            <h3 className="font-semibold mb-2">On-Demand Detailing</h3>
-            <p className="text-sm text-muted-foreground">
-              Professional interior and exterior detailing keeps your vehicle showroom-ready at all times.
-            </p>
-          </div>
-          <div className="text-center">
-            <div className="w-12 h-12 rounded-full bg-green-50 flex items-center justify-center mx-auto mb-4">
-              <CalendarClock className="h-6 w-6 text-green-600" />
-            </div>
-            <h3 className="font-semibold mb-2">Maintenance Scheduling</h3>
-            <p className="text-sm text-muted-foreground">
-              Coordinated service appointments, fluid checks, and preventive maintenance with trusted mechanics.
-            </p>
-          </div>
-          <div className="text-center">
-            <div className="w-12 h-12 rounded-full bg-amber-50 flex items-center justify-center mx-auto mb-4">
-              <Truck className="h-6 w-6 text-amber-600" />
-            </div>
-            <h3 className="font-semibold mb-2">Enclosed Transport</h3>
-            <p className="text-sm text-muted-foreground">
-              Door-to-door enclosed vehicle delivery to your home, airport, event, or any destination.
-            </p>
-          </div>
-          <div className="text-center">
-            <div className="w-12 h-12 rounded-full bg-purple-50 flex items-center justify-center mx-auto mb-4">
-              <BatteryCharging className="h-6 w-6 text-purple-600" />
-            </div>
-            <h3 className="font-semibold mb-2">Battery Tending</h3>
-            <p className="text-sm text-muted-foreground">
-              Smart conditioners maintain optimal charge levels with periodic engine starts and system checks.
-            </p>
-          </div>
+          ))}
         </div>
       </section>
 
       {/* Facilities */}
       {facilities.length > 0 && (
-        <section className="py-16 bg-zinc-50">
+        <section className="py-20 bg-card">
           <div className="max-w-7xl mx-auto px-4">
-            <h2 className="text-2xl font-bold mb-8">
+            <h2 className="font-serif text-3xl font-light text-foreground mb-10">
               Concierge Car Storage Facilities
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {facilities.map((f) => (
                 <Link key={f.id} href={`/facility/${f.slug}`}>
-                  <div className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                  <div className="bg-background rounded-xl overflow-hidden ring-1 ring-border hover:ring-primary/30 transition-all">
                     <div
                       className="h-48 bg-muted bg-cover bg-center"
                       style={{
@@ -152,13 +160,13 @@ export default async function ConciergeCarStoragePage() {
                       }}
                     />
                     <div className="p-4">
-                      <h3 className="font-semibold truncate">{f.name}</h3>
+                      <h3 className="font-semibold text-foreground truncate">{f.name}</h3>
                       <p className="text-sm text-muted-foreground">
                         {f.city}, {f.state}
                       </p>
                       {f.avgRating > 0 && (
                         <p className="text-sm mt-1">
-                          <span className="text-yellow-500">★</span> {f.avgRating.toFixed(1)}
+                          <span className="text-primary">&#9733;</span> {f.avgRating.toFixed(1)}
                           <span className="text-muted-foreground"> ({f.reviewCount})</span>
                         </p>
                       )}
@@ -167,7 +175,7 @@ export default async function ConciergeCarStoragePage() {
                 </Link>
               ))}
             </div>
-            <div className="text-center mt-8">
+            <div className="text-center mt-10">
               <Link href="/search?amenity=CONCIERGE">
                 <Button variant="outline">View All Concierge Storage</Button>
               </Link>
@@ -177,16 +185,17 @@ export default async function ConciergeCarStoragePage() {
       )}
 
       {/* FAQ Section */}
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4 max-w-4xl">
-          <h2 className="text-3xl font-bold text-center mb-10">
+      <section className="py-20">
+        <div className="mx-auto px-4 max-w-4xl">
+          <div className="mx-auto mb-8 h-px w-12 bg-primary" />
+          <h2 className="font-serif text-3xl font-light text-center text-foreground mb-12">
             Frequently Asked Questions
           </h2>
-          <div className="space-y-6">
+          <div className="space-y-4">
             {faqs.map((faq, i) => (
-              <div key={i} className="bg-white rounded-lg p-6 shadow-sm">
-                <h3 className="text-lg font-semibold mb-3">{faq.question}</h3>
-                <p className="text-gray-600 leading-relaxed">{faq.answer}</p>
+              <div key={i} className="bg-card rounded-xl p-6 ring-1 ring-border">
+                <h3 className="text-lg font-semibold text-foreground mb-3">{faq.question}</h3>
+                <p className="text-muted-foreground leading-relaxed">{faq.answer}</p>
               </div>
             ))}
           </div>
@@ -194,17 +203,21 @@ export default async function ConciergeCarStoragePage() {
       </section>
 
       {/* CTA */}
-      <section className="py-16 max-w-3xl mx-auto px-4 text-center">
-        <h2 className="text-2xl font-bold mb-4">
-          Own a Concierge Car Storage Facility?
-        </h2>
-        <p className="text-muted-foreground mb-6">
-          List your facility on AutoVault and reach thousands of luxury vehicle
-          owners searching for white-glove storage services.
-        </p>
-        <Link href="/pricing">
-          <Button>List Your Facility</Button>
-        </Link>
+      <section className="py-20 bg-card">
+        <div className="max-w-3xl mx-auto px-4 text-center">
+          <h2 className="font-serif text-3xl font-light text-foreground mb-4">
+            Own a Concierge Car Storage Facility?
+          </h2>
+          <p className="text-muted-foreground mb-8 leading-relaxed">
+            List your facility on AutoVault and reach thousands of luxury vehicle
+            owners searching for white-glove storage services.
+          </p>
+          <Link href="/pricing">
+            <Button className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold px-8">
+              List Your Facility
+            </Button>
+          </Link>
+        </div>
       </section>
     </div>
   );

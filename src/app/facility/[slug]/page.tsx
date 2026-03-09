@@ -138,7 +138,8 @@ export default async function FacilityPage({ params }: FacilityPageProps) {
   const stateInfo = resolveState(facility.state);
   const stateSlug = stateInfo?.slug || facility.state.toLowerCase();
   const stateName = stateInfo?.name || facility.state;
-  const citySlug = facility.city.toLowerCase().replace(/\s+/g, "-");
+  const stateAbbr = stateInfo?.abbreviation || facility.state;
+  const citySlug = `${facility.city.toLowerCase().replace(/\s+/g, "-")}-${stateAbbr.toLowerCase()}`;
 
   const jsonLd = facilityJsonLd(facility);
   const breadcrumbs = breadcrumbJsonLd([
@@ -266,7 +267,7 @@ export default async function FacilityPage({ params }: FacilityPageProps) {
                     </span>
                   </div>
                 </div>
-                <p className="text-sm text-gray-500">Last updated: {facility.updatedAt.toLocaleDateString("en-US", { month: "long", year: "numeric" })}</p>
+                <p className="text-sm text-muted-foreground">Last updated: {facility.updatedAt.toLocaleDateString("en-US", { month: "long", year: "numeric" })}</p>
               </div>
 
               {/* Description */}
@@ -600,20 +601,20 @@ export default async function FacilityPage({ params }: FacilityPageProps) {
         {relatedFacilities.length > 0 && (
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <section className="mt-12 border-t pt-8">
-              <h2 className="text-2xl font-bold mb-6">
-                More Car Storage in {facility.city}
+              <h2 className="font-serif text-2xl font-light mb-6 text-foreground">
+                More Luxury Car Storage in {facility.city}
               </h2>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 {relatedFacilities.map((rf) => (
                   <Link
                     key={rf.slug}
                     href={`/facility/${rf.slug}`}
-                    className="block rounded-lg border p-4 hover:border-blue-300 hover:shadow-sm transition-all"
+                    className="block rounded-lg bg-card p-4 ring-1 ring-border hover:ring-primary/30 transition-all"
                   >
-                    <h3 className="font-semibold">{rf.name}</h3>
+                    <h3 className="font-semibold text-foreground">{rf.name}</h3>
                     {rf.reviewCount > 0 && (
-                      <div className="mt-1 flex items-center gap-1 text-sm text-gray-500">
-                        <span className="text-yellow-500">&#9733;</span>
+                      <div className="mt-1 flex items-center gap-1 text-sm text-muted-foreground">
+                        <span className="text-primary">&#9733;</span>
                         <span>{rf.avgRating.toFixed(1)}</span>
                         <span>({rf.reviewCount})</span>
                       </div>
