@@ -10,11 +10,43 @@ Directory-first go-to-market with premium listing monetization.
 - **Framework:** Next.js 15 (App Router)
 - **Database:** PostgreSQL 16 on OP3 Hetzner server
 - **ORM:** Prisma 7 (uses PrismaPg adapter, NOT standard PrismaClient constructor)
-- **Styling:** Tailwind CSS + shadcn/ui
+- **Styling:** Tailwind CSS v4 + shadcn/ui
+- **Fonts:** Cormorant Garamond (serif headings) + DM Sans (body) via `next/font/google`
 - **Auth:** NextAuth.js v5 (Auth.js) — Google OAuth + Resend email magic link
 - **Payments:** Stripe (subscriptions for Verified $49/mo, Premium $149/mo)
 - **Deployment:** Coolify (Docker) on OP3 Hetzner via Cloudflare CDN
 - **Domain:** autovault.network (Cloudflare DNS, proxied)
+
+## Design System (Luxury Dark Theme)
+Dark-first aesthetic inspired by Bentley/Rolls Royce/Sotheby's. No light mode toggle.
+
+### Color Palette (OKLCh in globals.css)
+| Role | Hex | CSS Variable |
+|------|-----|-------------|
+| Background | `#0A0A0A` | `--background` |
+| Card/Surface | `#141414` | `--card` |
+| Elevated Surface | `#1A1A1A` | `--secondary` |
+| Text (warm cream) | `#F5F0EB` | `--foreground` |
+| Muted Text | `#9A9590` | `--muted-foreground` |
+| Accent (champagne gold) | `#C4A35A` | `--primary` |
+| Borders | `rgba(255,255,255,0.08)` | `--border` |
+
+### Typography
+- **Headings:** `font-serif` (Cormorant Garamond), typically `font-light` weight
+- **Body:** `font-sans` (DM Sans)
+- **Logo:** Serif uppercase with `tracking-[0.2em]`
+- **Section labels:** Uppercase, `tracking-widest`, `text-primary`
+
+### Key Design Patterns
+- **Header:** Transparent on page load, `bg-background/95 backdrop-blur-md` on scroll
+- **Hero sections:** Full viewport height with layered radial gradients (gold-tinted spotlight)
+- **Cards:** `bg-card ring-1 ring-border` with `hover:ring-primary/30` gold hover
+- **Search bar:** Glass-morphism (`bg-card/80 backdrop-blur-md`), gold focus ring
+- **Tier badges:** PREMIUM = gold (`border-primary/30 bg-primary/10`), VERIFIED = platinum/silver
+- **Decorative dividers:** Thin gold rule `h-px w-12 bg-primary` centered above headings
+- **Scroll animations:** `AnimateOnScroll` component (Intersection Observer, zero deps)
+- **Blog:** Branded as "The AutoVault Journal"
+- **Prose:** Custom `.prose-luxury` class for dark-bg blog content
 
 ## Infrastructure
 - **Coolify App UUID:** g4cwoc4oo8owsc4wgsgccww8
@@ -67,12 +99,14 @@ src/
     sitemap.xml/route.ts        # Dynamic sitemap
     robots.txt/route.ts         # Robots.txt
   components/
-    ui/                         # shadcn components
-    header.tsx                  # Auth-aware header (useSession)
-    footer.tsx                  # Footer with city/legal links
-    search-bar.tsx              # Search input with autocomplete
-    facility-card.tsx           # Facility card component
-    contact-form.tsx            # Reusable contact form
+    ui/                         # shadcn components (button has gold variant, badge has gold/platinum)
+    header.tsx                  # Scroll-aware transparent header with serif logo
+    footer.tsx                  # Dark luxury footer with serif branding
+    search-bar.tsx              # Glass-morphism search with gold focus
+    facility-card.tsx           # Dark cards with gold hover ring, gradient photo overlay
+    contact-form.tsx            # Contact form with gold success state
+    tier-badge.tsx              # Gold (premium) / platinum (verified) tier badges
+    animate-on-scroll.tsx       # Intersection Observer scroll-triggered fade-in-up
     providers.tsx               # SessionProvider wrapper
   lib/
     db.ts                       # Prisma client singleton
@@ -103,3 +137,7 @@ prisma/
 - City-level pages from day 1 (programmatic SEO)
 - Mobile-first responsive design
 - No over-engineering — directory MVP before any software features
+- Dark-first luxury aesthetic — no light/dark toggle, all pages use dark palette
+- Serif headings (`font-serif font-light`) on every page for brand consistency
+- Gold accent (`text-primary`, `bg-primary`) for CTAs, badges, and decorative elements
+- Zero new animation dependencies — use `AnimateOnScroll` component with CSS transitions
