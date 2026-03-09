@@ -20,29 +20,41 @@ const sans = DM_Sans({
 
 export const metadata: Metadata = {
   title: {
-    default: "AutoVault | Find Car Storage Near You",
+    default: "AutoVault | The World's Premier Luxury Vehicle Storage Directory",
     template: "%s | AutoVault",
   },
   description:
-    "AutoVault is the leading directory for car storage facilities across the United States. Compare indoor, outdoor, and climate controlled vehicle storage with reviews, pricing, and photos.",
+    "AutoVault is the global directory for luxury, exotic, classic, and collector car storage. Find climate-controlled, concierge-level facilities for Ferrari, Lamborghini, Porsche, and high-end vehicles worldwide.",
   keywords: [
-    "car storage",
-    "vehicle storage",
-    "indoor car storage",
-    "climate controlled car storage",
+    "luxury car storage",
     "exotic car storage",
+    "supercar storage",
     "classic car storage",
-    "car storage near me",
+    "collector car storage",
+    "Ferrari storage",
+    "Lamborghini storage",
+    "Porsche storage",
+    "climate controlled car storage",
+    "concierge car storage",
+    "enclosed car storage",
+    "car vault",
   ],
   openGraph: {
     type: "website",
     siteName: "AutoVault",
-    title: "AutoVault | Find Car Storage Near You",
+    title: "AutoVault | The World's Premier Luxury Vehicle Storage Directory",
     description:
-      "The leading directory for car storage facilities. Compare indoor, outdoor, and climate controlled vehicle storage options.",
+      "The global directory for luxury, exotic, and collector car storage. Find climate-controlled, concierge-level facilities worldwide.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    site: "@autovault",
+    title: "AutoVault | Luxury Vehicle Storage Directory",
+    description:
+      "The global directory for luxury, exotic, and collector car storage. Find climate-controlled, concierge-level facilities worldwide.",
   },
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || "https://autovault.com"
+    process.env.NEXT_PUBLIC_SITE_URL || "https://autovault.network"
   ),
 };
 

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Mail, MapPin, Clock } from "lucide-react";
 import { ContactForm } from "@/components/contact-form";
 
+export const revalidate = 86400;
+
 export const metadata: Metadata = {
   title: "Contact Us | AutoVault",
   description:
@@ -11,6 +13,28 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "ContactPage",
+            url: "https://autovault.network/contact",
+            mainEntity: {
+              "@type": "Organization",
+              name: "AutoVault",
+              url: "https://autovault.network",
+              contactPoint: {
+                "@type": "ContactPoint",
+                contactType: "customer service",
+                url: "https://autovault.network/contact",
+                areaServed: "US",
+              },
+            },
+          }),
+        }}
+      />
+
       {/* Header */}
         <section className="bg-gradient-to-b from-muted/50 to-background">
           <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">

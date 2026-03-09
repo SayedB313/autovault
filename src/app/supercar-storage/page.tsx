@@ -1,0 +1,212 @@
+import { prisma } from "@/lib/db";
+import type { Metadata } from "next";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { ArrowDownToLine, Box, BatteryCharging, Bell } from "lucide-react";
+import { faqPageJsonLd } from "@/lib/seo";
+
+export const revalidate = 3600;
+
+export const metadata: Metadata = {
+  title: "Supercar Storage | Climate-Controlled Facilities for Supercars | AutoVault",
+  description:
+    "Find secure, climate-controlled supercar storage near you. Purpose-built facilities for Ferrari, Lamborghini, McLaren, Porsche, Bugatti, and more. Compare pricing and features.",
+  keywords:
+    "supercar storage, hypercar storage, Ferrari storage, Lamborghini storage, McLaren storage, climate controlled supercar storage",
+};
+
+const faqs = [
+  {
+    question: "What is supercar storage?",
+    answer:
+      "Supercar storage is a premium vehicle storage service designed for high-performance vehicles from manufacturers like Ferrari, Lamborghini, McLaren, Porsche, and Bugatti. These purpose-built facilities feature flush-floor entry to protect low ground clearance, individual enclosed bays with dedicated climate zones, advanced battery conditioning systems, and concierge-level services. Every detail is engineered to preserve the mechanical integrity and aesthetic condition of vehicles valued at $200,000 to $5,000,000+.",
+  },
+  {
+    question: "How much does supercar storage cost per month?",
+    answer:
+      "Supercar storage typically costs between $500 and $2,000 per month depending on the facility tier, location, and services included. Basic climate-controlled enclosed storage starts around $500-$800/month, mid-tier facilities with battery conditioning and periodic starts run $800-$1,400/month, and full-service concierge storage with detailing, maintenance coordination, and transport ranges from $1,400-$2,000/month. Premium markets like Miami, Los Angeles, and New York command higher pricing. Multi-car discounts of 10-20% are common.",
+  },
+  {
+    question: "What temperature should supercars be stored at?",
+    answer:
+      "Supercars should be stored at a stable temperature between 60-70°F (15-21°C) with relative humidity maintained at 45-55%. Temperature consistency matters more than the exact degree -- fluctuations cause condensation that can damage sensitive electronics, corrode lightweight alloy components, and degrade high-performance tire compounds. Carbon fiber body panels and ceramic brake components are particularly sensitive to humidity extremes, making precision climate control essential for long-term preservation.",
+  },
+  {
+    question: "Why is flush-floor entry important for supercar storage?",
+    answer:
+      "Flush-floor entry is critical for supercars because these vehicles typically have only 3-5 inches of ground clearance. Standard ramps, inclines, and uneven thresholds can scrape front splitters, side skirts, and underbody aerodynamic components -- repairs that often cost $5,000-$20,000+. Purpose-built supercar storage facilities feature completely level, flush transitions from driveways to interior bays, eliminating any risk of undercarriage contact during entry and exit.",
+  },
+  {
+    question: "Do supercars need battery tenders during storage?",
+    answer:
+      "Yes, battery tenders are essential for stored supercars. Modern supercars have complex ECUs, hydraulic suspension systems, and multiple battery management modules that draw power even when the vehicle is off. Without a quality battery tender, batteries can drain in 2-4 weeks, leading to system recalibration issues costing $1,000-$5,000 at a dealer. Premium storage facilities provide CTEK or Battery Tender brand conditioners connected to each vehicle, maintaining optimal charge levels and extending battery lifespan.",
+  },
+  {
+    question: "What insurance do I need for a stored supercar?",
+    answer:
+      "Stored supercars require agreed-value insurance rather than standard actual cash value policies. Work with specialty insurers like Hagerty, Chubb, or AIG Private Client who understand supercar valuations. Ensure your policy covers the vehicle at its full agreed value while in storage, including fire, theft, flood, and facility structural damage. Verify that your storage facility carries adequate commercial liability insurance (minimum $1 million) and confirm their coverage doesn't conflict with your personal policy. Many facilities require proof of insurance before accepting vehicles.",
+  },
+];
+
+export default async function SupercarStoragePage() {
+  const facilities = await prisma.facility.findMany({
+    where: {
+      vehicleTypes: { hasSome: ["EXOTIC"] },
+      storageTypes: { hasSome: ["CLIMATE_CONTROLLED", "ENCLOSED"] },
+    },
+    include: {
+      photos: { take: 1, orderBy: { order: "asc" } },
+    },
+    orderBy: [{ tier: "desc" }, { avgRating: "desc" }],
+    take: 12,
+  });
+
+  return (
+    <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(faqPageJsonLd(faqs)),
+        }}
+      />
+
+      {/* Hero */}
+      <section className="bg-gradient-to-b from-zinc-900 to-zinc-800 text-white py-20">
+        <div className="max-w-5xl mx-auto px-4 text-center">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+            Supercar Storage
+          </h1>
+          <p className="text-lg text-zinc-300 max-w-2xl mx-auto mb-8">
+            Purpose-built facilities with flush-floor entry, individual enclosed
+            bays, and concierge services for the world&apos;s most exclusive vehicles.
+          </p>
+          <Link href="/search?vehicleType=EXOTIC&storageType=CLIMATE_CONTROLLED">
+            <Button size="lg" className="bg-white text-zinc-900 hover:bg-zinc-100">
+              Find Supercar Storage Near You
+            </Button>
+          </Link>
+        </div>
+      </section>
+
+      {/* Features */}
+      <section className="py-16 max-w-5xl mx-auto px-4">
+        <h2 className="text-2xl font-bold text-center mb-12">
+          What to Look For in Supercar Storage
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="text-center">
+            <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center mx-auto mb-4">
+              <ArrowDownToLine className="h-6 w-6 text-blue-600" />
+            </div>
+            <h3 className="font-semibold mb-2">Flush-Floor Entry</h3>
+            <p className="text-sm text-muted-foreground">
+              Level, zero-incline access protects low-clearance splitters, side skirts, and underbody aero components.
+            </p>
+          </div>
+          <div className="text-center">
+            <div className="w-12 h-12 rounded-full bg-green-50 flex items-center justify-center mx-auto mb-4">
+              <Box className="h-6 w-6 text-green-600" />
+            </div>
+            <h3 className="font-semibold mb-2">Individual Bays</h3>
+            <p className="text-sm text-muted-foreground">
+              Private, fully enclosed bays isolate your vehicle from dust, light, and contact with other cars.
+            </p>
+          </div>
+          <div className="text-center">
+            <div className="w-12 h-12 rounded-full bg-amber-50 flex items-center justify-center mx-auto mb-4">
+              <BatteryCharging className="h-6 w-6 text-amber-600" />
+            </div>
+            <h3 className="font-semibold mb-2">Battery Conditioning</h3>
+            <p className="text-sm text-muted-foreground">
+              Smart tenders maintain optimal charge levels, preventing costly ECU recalibration and system failures.
+            </p>
+          </div>
+          <div className="text-center">
+            <div className="w-12 h-12 rounded-full bg-purple-50 flex items-center justify-center mx-auto mb-4">
+              <Bell className="h-6 w-6 text-purple-600" />
+            </div>
+            <h3 className="font-semibold mb-2">Concierge Services</h3>
+            <p className="text-sm text-muted-foreground">
+              On-demand detailing, maintenance scheduling, transport coordination, and vehicle preparation.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Facilities */}
+      {facilities.length > 0 && (
+        <section className="py-16 bg-zinc-50">
+          <div className="max-w-7xl mx-auto px-4">
+            <h2 className="text-2xl font-bold mb-8">
+              Supercar Storage Facilities
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {facilities.map((f) => (
+                <Link key={f.id} href={`/facility/${f.slug}`}>
+                  <div className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                    <div
+                      className="h-48 bg-muted bg-cover bg-center"
+                      style={{
+                        backgroundImage: f.photos[0]
+                          ? `url(${f.photos[0].url})`
+                          : undefined,
+                      }}
+                    />
+                    <div className="p-4">
+                      <h3 className="font-semibold truncate">{f.name}</h3>
+                      <p className="text-sm text-muted-foreground">
+                        {f.city}, {f.state}
+                      </p>
+                      {f.avgRating > 0 && (
+                        <p className="text-sm mt-1">
+                          <span className="text-yellow-500">★</span> {f.avgRating.toFixed(1)}
+                          <span className="text-muted-foreground"> ({f.reviewCount})</span>
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+            <div className="text-center mt-8">
+              <Link href="/search?vehicleType=EXOTIC&storageType=CLIMATE_CONTROLLED">
+                <Button variant="outline">View All Supercar Storage</Button>
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* FAQ Section */}
+      <section className="py-16 bg-gray-50">
+        <div className="container mx-auto px-4 max-w-4xl">
+          <h2 className="text-3xl font-bold text-center mb-10">
+            Frequently Asked Questions
+          </h2>
+          <div className="space-y-6">
+            {faqs.map((faq, i) => (
+              <div key={i} className="bg-white rounded-lg p-6 shadow-sm">
+                <h3 className="text-lg font-semibold mb-3">{faq.question}</h3>
+                <p className="text-gray-600 leading-relaxed">{faq.answer}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="py-16 max-w-3xl mx-auto px-4 text-center">
+        <h2 className="text-2xl font-bold mb-4">
+          Own a Supercar Storage Facility?
+        </h2>
+        <p className="text-muted-foreground mb-6">
+          List your facility on AutoVault and reach thousands of supercar owners
+          searching for premium storage.
+        </p>
+        <Link href="/pricing">
+          <Button>List Your Facility</Button>
+        </Link>
+      </section>
+    </div>
+  );
+}

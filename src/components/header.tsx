@@ -14,9 +14,12 @@ import {
 } from "@/components/ui/sheet";
 
 const NAV_LINKS = [
-  { label: "Search", href: "/search" },
-  { label: "Luxury", href: "/luxury-car-storage" },
-  { label: "About", href: "/about" },
+  { label: "Storage", href: "/luxury-car-storage" },
+  { label: "Exotic", href: "/exotic-car-storage" },
+  { label: "Classic", href: "/classic-car-storage" },
+  { label: "Supercar", href: "/supercar-storage" },
+  { label: "Brands", href: "/ferrari-storage" },
+  { label: "Blog", href: "/blog" },
   { label: "Pricing", href: "/pricing" },
 ] as const;
 

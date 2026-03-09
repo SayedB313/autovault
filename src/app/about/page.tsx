@@ -3,6 +3,8 @@ import Link from "next/link";
 import { ArrowRight, Shield, Search, Users, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+export const revalidate = 86400;
+
 export const metadata: Metadata = {
   title: "About AutoVault - Our Mission | AutoVault",
   description:

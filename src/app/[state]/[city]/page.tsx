@@ -4,11 +4,11 @@ import type { Metadata } from "next";
 import { ChevronRight, MapPin } from "lucide-react";
 import { prisma } from "@/lib/db";
 import { US_STATES } from "@/lib/geo";
-import { generateCityMeta, cityJsonLd } from "@/lib/seo";
+import { generateCityMeta, cityJsonLd, breadcrumbJsonLd } from "@/lib/seo";
 import { FacilityCard } from "@/components/facility-card";
 import { SearchBar } from "@/components/search-bar";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 interface CityPageProps {
   params: Promise<{ state: string; city: string }>;
@@ -36,7 +36,22 @@ async function getCityData(stateSlug: string, citySlug: string) {
     orderBy: [{ tier: "desc" }, { avgRating: "desc" }],
   });
 
-  return { city, stateInfo, facilities };
+  const nearbyCities = await prisma.city.findMany({
+    where: {
+      stateSlug: stateInfo.slug,
+      slug: { not: citySlug },
+    },
+    select: {
+      name: true,
+      slug: true,
+      stateSlug: true,
+      facilityCount: true,
+    },
+    take: 8,
+    orderBy: { facilityCount: "desc" },
+  });
+
+  return { city, stateInfo, facilities, nearbyCities };
 }
 
 export async function generateMetadata({
@@ -68,7 +83,7 @@ export default async function CityPage({ params }: CityPageProps) {
 
   if (!data) notFound();
 
-  const { city, stateInfo, facilities } = data;
+  const { city, stateInfo, facilities, nearbyCities } = data;
 
   const minPrice = facilities.reduce((min, f) => {
     if (f.priceRangeMin !== null && (min === null || f.priceRangeMin < min))
@@ -101,9 +116,16 @@ export default async function CityPage({ params }: CityPageProps) {
     }))
   );
 
+  const breadcrumbs = breadcrumbJsonLd([
+    { name: "Home", url: "https://autovault.network" },
+    { name: stateInfo.name, url: `https://autovault.network/${stateInfo.slug}` },
+    { name: city.name },
+  ]);
+
   return (
     <>
       <JsonLdScript data={jsonLd} />
+      <JsonLdScript data={breadcrumbs} />
 
         {/* Breadcrumbs */}
         <div className="border-b bg-muted/30">
@@ -207,6 +229,31 @@ export default async function CityPage({ params }: CityPageProps) {
             </div>
           </div>
         </div>
+
+        {/* Nearby Cities */}
+        {nearbyCities.length > 0 && (
+          <div className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
+            <section className="mt-12">
+              <h2 className="text-2xl font-bold mb-6">
+                More Car Storage in {stateInfo.name}
+              </h2>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {nearbyCities.map((nc) => (
+                  <Link
+                    key={nc.slug}
+                    href={`/${nc.stateSlug}/${nc.slug}`}
+                    className="block p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                  >
+                    <p className="font-medium">{nc.name}</p>
+                    <p className="text-sm text-gray-500">
+                      {nc.facilityCount} facilit{nc.facilityCount !== 1 ? "ies" : "y"}
+                    </p>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          </div>
+        )}
     </>
   );
 }

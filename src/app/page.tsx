@@ -22,13 +22,13 @@ import { Button } from "@/components/ui/button";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "AutoVault - Find Car Storage Near You | 2,000+ Facilities Nationwide",
+  title: "AutoVault - The World's Premier Luxury Vehicle Storage Directory",
   description:
-    "Find and compare car storage facilities near you. Browse 2,000+ indoor, outdoor, climate-controlled, and luxury vehicle storage options across the US.",
+    "Find and compare luxury, exotic, and collector car storage facilities worldwide. Climate-controlled, concierge-level storage for Ferrari, Lamborghini, Porsche, and high-end vehicles.",
   openGraph: {
-    title: "AutoVault - Find Car Storage Near You",
+    title: "AutoVault - Luxury Vehicle Storage Directory",
     description:
-      "Browse 2,000+ car storage facilities. Compare indoor, outdoor, climate-controlled, and luxury options.",
+      "The global directory for luxury, exotic, and collector car storage. Climate-controlled, concierge-level facilities worldwide.",
     siteName: "AutoVault",
     type: "website",
   },
@@ -36,28 +36,28 @@ export const metadata: Metadata = {
 
 const STORAGE_TYPES = [
   {
-    label: "Indoor",
-    value: "INDOOR",
-    icon: Warehouse,
-    description: "Protected from the elements in fully enclosed buildings",
-  },
-  {
-    label: "Outdoor",
-    value: "OUTDOOR",
-    icon: Sun,
-    description: "Affordable open-air parking with security",
-  },
-  {
     label: "Climate Controlled",
     value: "CLIMATE_CONTROLLED",
     icon: Thermometer,
-    description: "Temperature and humidity regulated environments",
+    description: "Temperature and humidity regulated for paint, leather, and electronics",
   },
   {
-    label: "Luxury",
+    label: "Enclosed",
     value: "ENCLOSED",
+    icon: Warehouse,
+    description: "Private, fully enclosed bays for individual vehicle protection",
+  },
+  {
+    label: "Concierge",
+    value: "CONCIERGE",
     icon: Crown,
-    description: "Premium storage for exotic and collector vehicles",
+    description: "White-glove service with detailing, maintenance, and transport",
+  },
+  {
+    label: "Indoor",
+    value: "INDOOR",
+    icon: Sun,
+    description: "Secure indoor parking in professionally managed facilities",
   },
 ];
 
@@ -93,9 +93,15 @@ export default async function HomePage() {
       take: 12,
     }),
     prisma.facility.findMany({
-      where: { tier: "PREMIUM" },
+      where: {
+        OR: [
+          { tier: "PREMIUM" },
+          { tier: "VERIFIED", amenities: { hasSome: ["CONCIERGE", "DETAILING"] } },
+        ],
+        vehicleTypes: { hasSome: ["EXOTIC", "CLASSIC"] },
+      },
       include: { photos: { orderBy: { order: "asc" }, take: 1 } },
-      orderBy: { avgRating: "desc" },
+      orderBy: [{ tier: "desc" }, { avgRating: "desc" }],
       take: 6,
     }),
   ]);
@@ -106,7 +112,7 @@ export default async function HomePage() {
     "@type": "WebSite",
     name: "AutoVault",
     url: "https://autovault.network",
-    description: "Find and compare car storage facilities near you. Browse 2,000+ indoor, outdoor, climate-controlled, and luxury vehicle storage options across the US.",
+    description: "The global directory for luxury, exotic, and collector car storage. Find climate-controlled, concierge-level facilities for high-end vehicles worldwide.",
     potentialAction: {
       "@type": "SearchAction",
       target: {
@@ -134,16 +140,16 @@ export default async function HomePage() {
         <div className="relative mx-auto max-w-4xl px-4 py-24 text-center sm:px-6 lg:px-8">
           <div className="animate-fade-in-up">
             <p className="mb-6 text-xs font-medium uppercase tracking-[0.3em] text-primary">
-              The Premier Car Storage Network
+              The World&apos;s Premier Luxury Vehicle Storage Directory
             </p>
             <h1 className="font-serif text-5xl font-light leading-[1.1] tracking-tight text-foreground sm:text-6xl lg:text-7xl">
-              Where Exceptional Cars{" "}
-              <span className="text-primary">Find Their Home</span>
+              Premium Storage for{" "}
+              <span className="text-primary">Extraordinary Vehicles</span>
             </h1>
             <p className="mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-foreground/60">
-              Browse 2,000+ curated car storage facilities. Compare
-              climate-controlled, luxury, and secure storage options for your
-              prized vehicle.
+              The global directory for luxury, exotic, and collector car storage.
+              Find climate-controlled, concierge-level facilities for your
+              Ferrari, Lamborghini, Porsche, and other high-end vehicles.
             </p>
           </div>
 
@@ -153,8 +159,8 @@ export default async function HomePage() {
 
           <div className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-foreground/40 animate-fade-in-up" style={{ animationDelay: "0.3s" }}>
             <span className="flex items-center gap-2">
-              <MapPin className="size-3.5" />
-              2,000+ Facilities
+              <Crown className="size-3.5 text-primary" />
+              Luxury &amp; Exotic Specialists
             </span>
             <span className="hidden h-4 w-px bg-border sm:block" />
             <span className="flex items-center gap-2">
@@ -163,8 +169,8 @@ export default async function HomePage() {
             </span>
             <span className="hidden h-4 w-px bg-border sm:block" />
             <span className="flex items-center gap-2">
-              <Search className="size-3.5" />
-              Free to Search
+              <MapPin className="size-3.5" />
+              Worldwide Directory
             </span>
           </div>
         </div>
@@ -182,7 +188,7 @@ export default async function HomePage() {
             Browse by Storage Type
           </h2>
           <p className="mt-4 text-muted-foreground">
-            Find the right type of storage for your vehicle
+            Purpose-built storage solutions for high-value vehicles
           </p>
         </AnimateOnScroll>
         <div className="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -214,10 +220,10 @@ export default async function HomePage() {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <AnimateOnScroll className="text-center">
               <h2 className="font-serif text-3xl font-light tracking-tight text-foreground sm:text-4xl">
-                Popular Cities
+                Top Markets
               </h2>
               <p className="mt-4 text-muted-foreground">
-                Explore car storage options in top cities across the US
+                Luxury vehicle storage in premier markets
               </p>
             </AnimateOnScroll>
             <div className="mt-14 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
@@ -260,10 +266,10 @@ export default async function HomePage() {
           <AnimateOnScroll className="text-center">
             <div className="mx-auto mb-6 h-px w-12 bg-primary" />
             <h2 className="font-serif text-3xl font-light tracking-tight text-foreground sm:text-4xl">
-              Featured Facilities
+              Featured Luxury Facilities
             </h2>
             <p className="mt-4 text-muted-foreground">
-              Top-rated premium car storage facilities
+              Top-rated storage for exotic, classic, and collector vehicles
             </p>
           </AnimateOnScroll>
           <div className="mt-14 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -292,7 +298,7 @@ export default async function HomePage() {
               How It Works
             </h2>
             <p className="mt-4 text-muted-foreground">
-              Finding the right car storage is easy with AutoVault
+              Finding the right luxury storage is easy with AutoVault
             </p>
           </AnimateOnScroll>
           <div className="mt-16 grid grid-cols-1 gap-12 md:grid-cols-3">
@@ -323,11 +329,11 @@ export default async function HomePage() {
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,oklch(0.20_0.02_85)_0%,transparent_70%)] opacity-50" />
             <div className="relative z-10">
               <h2 className="font-serif text-3xl font-light tracking-tight text-foreground sm:text-4xl">
-                Own a Car Storage Facility?
+                Own a Luxury Storage Facility?
               </h2>
               <p className="mt-6 text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                List your facility on AutoVault for free and reach thousands of
-                car owners looking for storage. Upgrade to get verified status,
+                List your facility on AutoVault and reach collectors, enthusiasts,
+                and high-net-worth vehicle owners worldwide. Get verified status,
                 premium placement, and lead management tools.
               </p>
               <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">

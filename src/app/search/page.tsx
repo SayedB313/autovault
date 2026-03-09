@@ -96,6 +96,7 @@ export async function generateMetadata({
   searchParams,
 }: SearchPageProps): Promise<Metadata> {
   const params = await searchParams;
+  const page = Math.max(1, parseInt(params.page || "1", 10));
   const parts: string[] = [];
 
   if (params.q) parts.push(params.q);
@@ -108,6 +109,12 @@ export async function generateMetadata({
   return {
     title: `Car Storage Search: ${query} | AutoVault`,
     description: `Search and compare car storage facilities ${parts.length > 0 ? parts.join(" ") : "near you"}. Filter by type, price, and amenities.`,
+    alternates: {
+      canonical: page > 1
+        ? `https://autovault.network/search${params.q ? `?q=${params.q}` : ''}`
+        : undefined,
+    },
+    robots: page > 1 ? { index: false, follow: true } : undefined,
   };
 }
 

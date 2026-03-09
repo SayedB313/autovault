@@ -1,41 +1,101 @@
-# AutoVault — Car Storage Directory & Operations Platform
+# AutoVault — Car Storage Directory Platform
 
 ## Project Overview
-AutoVault is a car storage directory and operations platform. Directory-first go-to-market, software as upsell.
+AutoVault is a car storage directory platform at **https://autovault.network**.
+Directory-first go-to-market with premium listing monetization.
 
 **Strategy:** Build the Zillow of car storage. Monetize like Yelp. Upsell like Shopify.
 
-## Business Model (Directory-First Pivot)
-1. **Free listings** — build supply, SEO, facility relationships (Month 1-3)
-2. **Verified/Premium listings** — $49-199/mo badges, photos, priority ranking (Month 3-6)
-3. **Lead generation** — charge per qualified lead (Month 6-12)
-4. **Software upsell** — "AutoVault Verified" requires running platform software (Month 12+)
-5. **Marketplace commission** — detailing, transport, maintenance (Month 18+)
-
-## Target Market
-- **Primary:** All car storage facilities in the US (10,000+)
-- **Premium segment:** Luxury/exotic car storage (200-500+ facilities, ZERO directory exists)
-- **End users:** Car owners searching for storage (170K-350K monthly searches)
-
-## Competitive Landscape
-- **SpareFoot/Storable** — 20K+ general storage listings, $1B+ revenue, no car specialization
-- **Neighbor.com** — $74M funded P2P marketplace, budget positioning, no luxury
-- **StorageCafe** — Yardi-owned directory, generic
-- **Gap:** No dedicated car storage directory exists. No luxury segment aggregator.
-
-## Key Metrics (from research)
-- Keyword cluster volume: 170K-350K/mo
-- CPC range: $5-15
-- Organic SEO competition: LOW (especially luxury/exotic)
-- US luxury car market: $110B → $215B by 2035 (BCG)
-- Vehicle storage market: $22.85B by 2032
-
 ## Tech Stack
-TBD — see implementation plan
+- **Framework:** Next.js 15 (App Router)
+- **Database:** PostgreSQL 16 on OP3 Hetzner server
+- **ORM:** Prisma 7 (uses PrismaPg adapter, NOT standard PrismaClient constructor)
+- **Styling:** Tailwind CSS + shadcn/ui
+- **Auth:** NextAuth.js v5 (Auth.js) — Google OAuth + Resend email magic link
+- **Payments:** Stripe (subscriptions for Verified $49/mo, Premium $149/mo)
+- **Deployment:** Coolify (Docker) on OP3 Hetzner via Cloudflare CDN
+- **Domain:** autovault.network (Cloudflare DNS, proxied)
+
+## Infrastructure
+- **Coolify App UUID:** g4cwoc4oo8owsc4wgsgccww8
+- **Deploy:** Push to `main` then trigger via Coolify API: `POST /api/v1/deploy?uuid=g4cwoc4oo8owsc4wgsgccww8`
+- **Container DB:** `postgresql://coolify_apps:coolify_apps_op3_2026@10.0.1.1:5432/autovault_db`
+- **Local dev DB:** Requires SSH tunnel: `ssh -L 5433:localhost:5432 openclaw@100.76.178.67`
+- **GitHub:** https://github.com/SayedB313/autovault (public)
+
+## Key Patterns
+- **Prisma 7:** Uses `PrismaPg` adapter in seed scripts — `new PrismaPg({ connectionString })`
+- **NextAuth v5:** Requires `AUTH_TRUST_HOST=true` env var when behind Cloudflare/Traefik proxy
+- **City slugs:** Include state abbreviation — `los-angeles-ca`, `miami-fl`, `new-york-ny`
+- **State slugs:** Kebab-case — `california`, `new-york`, `north-carolina`
+- **Coolify API:** Deploy endpoint is `/api/v1/deploy?uuid=APP_UUID` (NOT `/applications/UUID/deploy`)
+- **Coolify domain field:** Use `domains` (not `fqdn`) in PATCH requests
+
+## Data
+- 2,048 facilities seeded via Google Places API
+- 3,758 facility photos
+- 50 cities with facility counts
+- 11 blog posts (SEO content)
+- 2,146 URLs in sitemap
 
 ## Project Structure
-- `/00-OVERVIEW.md` through `/18-COMPETITIVE-DIRECTORY-ANALYSIS.md` — Full research & analysis
-- Research source: IdeaBrowser idea #3028 + independent competitive analysis
+```
+src/
+  app/
+    page.tsx                    # Homepage
+    search/page.tsx             # Search with filters, sort, pagination
+    facility/[slug]/page.tsx    # Facility detail with photos, reviews, contact
+    [state]/page.tsx            # State landing page
+    [state]/[city]/page.tsx     # City landing page
+    blog/page.tsx               # Blog listing
+    blog/[slug]/page.tsx        # Blog post
+    luxury-car-storage/         # SEO landing pages
+    exotic-car-storage/
+    classic-car-storage/
+    auth/signin/                # Sign in (Suspense-wrapped)
+    dashboard/                  # Owner dashboard, billing, facility editing
+    admin/                      # Admin panel (facilities, users, stats)
+    claim/[facilityId]/         # Claim listing flow
+    api/
+      auth/[...nextauth]/       # Auth routes
+      search/                   # Search API
+      leads/                    # Lead submission
+      facilities/[id]/          # Facility CRUD
+      checkout/                 # Stripe checkout session
+      billing/portal/           # Stripe billing portal
+      webhooks/stripe/          # Stripe webhook handler
+    sitemap.xml/route.ts        # Dynamic sitemap
+    robots.txt/route.ts         # Robots.txt
+  components/
+    ui/                         # shadcn components
+    header.tsx                  # Auth-aware header (useSession)
+    footer.tsx                  # Footer with city/legal links
+    search-bar.tsx              # Search input with autocomplete
+    facility-card.tsx           # Facility card component
+    contact-form.tsx            # Reusable contact form
+    providers.tsx               # SessionProvider wrapper
+  lib/
+    db.ts                       # Prisma client singleton
+    auth.ts                     # NextAuth config
+    stripe.ts                   # Stripe client + plan definitions
+    seo.ts                      # JSON-LD generators
+prisma/
+  schema.prisma                 # Full schema (User, Facility, Review, Lead, City, etc.)
+  seed.ts                       # Google Places facility seeder
+  seed-cities.ts                # City seeder
+  seed-blog.ts                  # Blog post seeder
+  blog-posts/                   # Blog content JSON files
+```
+
+## Environment Variables (Production)
+**Set:** DATABASE_URL, NEXTAUTH_SECRET, NEXTAUTH_URL, GOOGLE_PLACES_API_KEY, NEXT_PUBLIC_GOOGLE_MAPS_API_KEY, NEXT_PUBLIC_APP_URL, NEXT_PUBLIC_SITE_URL, STRIPE_SECRET_KEY, NODE_ENV, AUTH_TRUST_HOST
+
+**Missing (need to add):**
+- GOOGLE_CLIENT_ID + GOOGLE_CLIENT_SECRET (Google OAuth)
+- RESEND_API_KEY (email magic links)
+- STRIPE_WEBHOOK_SECRET (webhook verification)
+- NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY (frontend checkout)
+- Cloudflare R2 vars (image uploads — future)
 
 ## Development Principles
 - Ship fast, validate with real facilities before over-building

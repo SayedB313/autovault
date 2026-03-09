@@ -13,7 +13,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { prisma } from "@/lib/db";
-import { generateFacilityMeta, facilityJsonLd } from "@/lib/seo";
+import { generateFacilityMeta, facilityJsonLd, breadcrumbJsonLd } from "@/lib/seo";
 import { resolveState } from "@/lib/geo";
 import { TierBadge } from "@/components/tier-badge";
 import { Badge } from "@/components/ui/badge";
@@ -48,7 +48,7 @@ export async function generateMetadata({
 }
 
 // Dynamic rendering — DB not available at build time
-export const dynamic = "force-dynamic";
+export const revalidate = 1800;
 
 const STORAGE_TYPE_LABELS: Record<string, string> = {
   INDOOR: "Indoor",
@@ -114,17 +114,45 @@ export default async function FacilityPage({ params }: FacilityPageProps) {
 
   if (!facility) notFound();
 
+  const relatedFacilities = await prisma.facility.findMany({
+    where: {
+      city: facility.city,
+      state: facility.state,
+      id: { not: facility.id },
+    },
+    select: {
+      name: true,
+      slug: true,
+      avgRating: true,
+      reviewCount: true,
+      photos: {
+        select: { url: true, alt: true },
+        take: 1,
+        orderBy: { order: "asc" },
+      },
+    },
+    take: 4,
+    orderBy: { avgRating: "desc" },
+  });
+
   const stateInfo = resolveState(facility.state);
   const stateSlug = stateInfo?.slug || facility.state.toLowerCase();
   const stateName = stateInfo?.name || facility.state;
   const citySlug = facility.city.toLowerCase().replace(/\s+/g, "-");
 
   const jsonLd = facilityJsonLd(facility);
+  const breadcrumbs = breadcrumbJsonLd([
+    { name: "Home", url: "https://autovault.network" },
+    { name: stateName, url: `https://autovault.network/${stateSlug}` },
+    { name: facility.city, url: `https://autovault.network/${stateSlug}/${citySlug}` },
+    { name: facility.name },
+  ]);
   const hours = facility.hours as Record<string, string> | null;
 
   return (
     <>
       <JsonLdScript data={jsonLd} />
+      <JsonLdScript data={breadcrumbs} />
 
       {/* Breadcrumbs */}
         <div className="border-b bg-muted/30">
@@ -238,6 +266,7 @@ export default async function FacilityPage({ params }: FacilityPageProps) {
                     </span>
                   </div>
                 </div>
+                <p className="text-sm text-gray-500">Last updated: {facility.updatedAt.toLocaleDateString("en-US", { month: "long", year: "numeric" })}</p>
               </div>
 
               {/* Description */}
@@ -567,6 +596,34 @@ export default async function FacilityPage({ params }: FacilityPageProps) {
             </div>
           </div>
         </div>
+
+        {relatedFacilities.length > 0 && (
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <section className="mt-12 border-t pt-8">
+              <h2 className="text-2xl font-bold mb-6">
+                More Car Storage in {facility.city}
+              </h2>
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                {relatedFacilities.map((rf) => (
+                  <Link
+                    key={rf.slug}
+                    href={`/facility/${rf.slug}`}
+                    className="block rounded-lg border p-4 hover:border-blue-300 hover:shadow-sm transition-all"
+                  >
+                    <h3 className="font-semibold">{rf.name}</h3>
+                    {rf.reviewCount > 0 && (
+                      <div className="mt-1 flex items-center gap-1 text-sm text-gray-500">
+                        <span className="text-yellow-500">&#9733;</span>
+                        <span>{rf.avgRating.toFixed(1)}</span>
+                        <span>({rf.reviewCount})</span>
+                      </div>
+                    )}
+                  </Link>
+                ))}
+              </div>
+            </section>
+          </div>
+        )}
     </>
   );
 }

@@ -6,7 +6,8 @@ import { STATE_ABBR_TO_NAME } from "@/lib/geo";
 // ============================================================
 
 const SITE_NAME = "AutoVault";
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://autovault.com";
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://autovault.network";
 
 // ============================================================
 // Label Helpers
@@ -196,7 +197,7 @@ export function facilityJsonLd(
 ): Record<string, unknown> {
   const jsonLd: Record<string, unknown> = {
     "@context": "https://schema.org",
-    "@type": "LocalBusiness",
+    "@type": "SelfStorage",
     name: facility.name,
     description:
       facility.description ??
@@ -281,7 +282,7 @@ export function cityJsonLd(
       };
       if (f.reviewCount > 0) {
         listItem.item = {
-          "@type": "LocalBusiness",
+          "@type": "SelfStorage",
           name: f.name,
           aggregateRating: {
             "@type": "AggregateRating",
@@ -292,5 +293,73 @@ export function cityJsonLd(
       }
       return listItem;
     }),
+  };
+}
+
+// ============================================================
+// JSON-LD: Organization
+// ============================================================
+
+export function organizationJsonLd(): Record<string, unknown> {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": `${SITE_URL}/#organization`,
+    name: SITE_NAME,
+    url: SITE_URL,
+    description:
+      "AutoVault is the global directory for luxury, exotic, classic, and collector car storage. Find climate-controlled, concierge-level facilities for high-end vehicles worldwide.",
+    foundingDate: "2026",
+    sameAs: [
+      "https://twitter.com/autovault",
+      "https://www.linkedin.com/company/autovault",
+    ],
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "customer service",
+      url: `${SITE_URL}/contact`,
+    },
+  };
+}
+
+// ============================================================
+// JSON-LD: BreadcrumbList
+// ============================================================
+
+type BreadcrumbItem = { name: string; url?: string };
+
+export function breadcrumbJsonLd(
+  items: BreadcrumbItem[]
+): Record<string, unknown> {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: item.name,
+      ...(item.url ? { item: item.url } : {}),
+    })),
+  };
+}
+
+// ============================================================
+// JSON-LD: FAQPage
+// ============================================================
+
+type FaqItem = { question: string; answer: string };
+
+export function faqPageJsonLd(faqs: FaqItem[]): Record<string, unknown> {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.answer,
+      },
+    })),
   };
 }

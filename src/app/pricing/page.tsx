@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Check, X, ArrowRight, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { faqPageJsonLd } from "@/lib/seo";
+
+export const revalidate = 86400;
 
 export const metadata: Metadata = {
   title: "Pricing - List Your Facility | AutoVault",
@@ -169,6 +172,65 @@ const FAQ_ITEMS = [
 export default function PricingPage() {
   return (
     <>
+      {/* Structured Data: Product Offers */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            name: "AutoVault Pricing Plans",
+            url: "https://autovault.network/pricing",
+            mainEntity: {
+              "@type": "Product",
+              name: "AutoVault Facility Listing",
+              description:
+                "List your car storage facility on AutoVault to reach thousands of vehicle owners searching for storage.",
+              brand: { "@type": "Organization", name: "AutoVault" },
+              offers: [
+                {
+                  "@type": "Offer",
+                  name: "Free Listing",
+                  price: "0",
+                  priceCurrency: "USD",
+                  description:
+                    "Get listed and start receiving inquiries at no cost. Includes basic listing with contact info, search results placement, and up to 3 photos.",
+                  availability: "https://schema.org/InStock",
+                },
+                {
+                  "@type": "Offer",
+                  name: "Verified Listing",
+                  price: "49",
+                  priceCurrency: "USD",
+                  description:
+                    "Stand out with a verified badge, priority search placement, up to 10 photos, review responses, and custom business description.",
+                  availability: "https://schema.org/InStock",
+                  priceValidUntil: "2026-12-31",
+                },
+                {
+                  "@type": "Offer",
+                  name: "Premium Listing",
+                  price: "149",
+                  priceCurrency: "USD",
+                  description:
+                    "Maximum visibility with featured placement on city pages and homepage, lead analytics dashboard, competitor insights, premium badge, and dedicated account manager.",
+                  availability: "https://schema.org/InStock",
+                  priceValidUntil: "2026-12-31",
+                },
+              ],
+            },
+          }),
+        }}
+      />
+
+      {/* Structured Data: FAQ */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(faqPageJsonLd(FAQ_ITEMS)),
+        }}
+      />
+
       {/* Header */}
         <section className="bg-gradient-to-b from-muted/50 to-background">
           <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">

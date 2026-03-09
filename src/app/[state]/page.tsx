@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { MapPin, ChevronRight, ArrowRight } from "lucide-react";
 import { prisma } from "@/lib/db";
 import { US_STATES } from "@/lib/geo";
-import { generateStateMeta } from "@/lib/seo";
+import { generateStateMeta, breadcrumbJsonLd } from "@/lib/seo";
 
 interface StatePageProps {
   params: Promise<{ state: string }>;
@@ -28,8 +28,7 @@ export async function generateMetadata({
   return generateStateMeta(stateInfo.abbreviation, cityCount, facilityCount);
 }
 
-// Dynamic rendering — DB not available at build time
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export default async function StatePage({ params }: StatePageProps) {
   const { state: stateSlug } = await params;
@@ -44,8 +43,15 @@ export default async function StatePage({ params }: StatePageProps) {
 
   const totalFacilities = cities.reduce((sum, c) => sum + c.facilityCount, 0);
 
+  const breadcrumbs = breadcrumbJsonLd([
+    { name: "Home", url: "https://autovault.network" },
+    { name: stateInfo.name },
+  ]);
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs) }} />
+
       {/* Breadcrumbs */}
         <div className="border-b bg-muted/30">
           <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6 lg:px-8">
@@ -125,6 +131,35 @@ export default async function StatePage({ params }: StatePageProps) {
               ))}
             </div>
           )}
+
+          {/* SEO Content Section */}
+          <section className="mt-16 max-w-3xl mx-auto">
+            <h2 className="text-2xl font-bold mb-4">
+              Car Storage Options in {stateInfo.name}
+            </h2>
+            <div className="prose prose-gray max-w-none space-y-4 text-gray-600">
+              <p>
+                {stateInfo.name} offers {totalFacilities} car storage facilities across{" "}
+                {cities.length} cities, providing vehicle owners with a wide range of indoor,
+                outdoor, and climate-controlled storage solutions. Whether you need
+                short-term parking during travel or long-term preservation for a classic
+                or exotic vehicle, AutoVault helps you find and compare the best options
+                in your area.
+              </p>
+              <p>
+                Climate-controlled storage is especially important in {stateInfo.name} to protect
+                vehicles from temperature extremes and humidity damage. Many facilities
+                offer 24/7 security monitoring, enclosed garages, and specialized care
+                for high-value vehicles. Use AutoVault to compare pricing, read verified
+                reviews, and contact facilities directly.
+              </p>
+              <p>
+                Browse our {stateInfo.name} city pages below to find car storage near you, or
+                use the <a href="/search" className="text-blue-600 hover:underline">search page</a> to
+                filter by storage type, vehicle type, and amenities.
+              </p>
+            </div>
+          </section>
         </div>
     </>
   );
