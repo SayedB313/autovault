@@ -23,8 +23,10 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Generate Prisma client in builder stage
-ENV DATABASE_URL="postgresql://build:build@localhost:5432/build"
+# Accept DATABASE_URL as build arg for ISR prerendering (Coolify passes this)
+ARG DATABASE_URL="postgresql://build:build@localhost:5432/build"
+ENV DATABASE_URL=${DATABASE_URL}
+
 RUN npx prisma generate
 
 # Create barrel export (Prisma 7 doesn't auto-generate index.ts)
