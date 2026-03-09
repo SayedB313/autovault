@@ -309,7 +309,7 @@ async function main() {
             gen_random_uuid(), $1, $2, $3, $4, $5, $6, 'US',
             $7, $8, $9, $10, $11,
             $12, $13, $14::jsonb,
-            $15::text[], $16::text[], $17::text[], $18,
+            $15::"StorageType"[], $16::"VehicleType"[], $17::"Amenity"[], $18,
             NOW(), NOW()
           ) RETURNING id
         `, [
