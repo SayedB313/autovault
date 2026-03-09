@@ -59,7 +59,7 @@ export const metadata: Metadata = {
   verification: {
     google: "google64fd76f59a3147f0",
     other: {
-      "msvalidate.01": "3814AE54AADDF5CFB226612E1GD5BF01",
+      "msvalidate.01": "3814AE54AADDF5CFB226612E16D5BF01",
     },
   },
   manifest: "/site.webmanifest",
