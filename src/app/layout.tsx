@@ -56,6 +56,12 @@ export const metadata: Metadata = {
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL || "https://autovault.network"
   ),
+  verification: {
+    google: "google64fd76f59a3147f0",
+    other: {
+      "msvalidate.01": "3814AE54AADDF5CFB226612E1GD5BF01",
+    },
+  },
   manifest: "/site.webmanifest",
   other: {
     "theme-color": "#0A0A0A",
