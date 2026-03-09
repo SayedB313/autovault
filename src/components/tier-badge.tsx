@@ -16,7 +16,7 @@ export function TierBadge({ tier, className }: TierBadgeProps) {
     return (
       <Badge
         variant="outline"
-        className={`gap-1 border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-800 dark:bg-blue-950 dark:text-blue-300 ${className ?? ""}`}
+        className={`gap-1 border-foreground/20 bg-foreground/5 text-foreground/80 backdrop-blur-sm ${className ?? ""}`}
       >
         <CheckCircle className="size-3" />
         Verified
@@ -28,7 +28,7 @@ export function TierBadge({ tier, className }: TierBadgeProps) {
     return (
       <Badge
         variant="outline"
-        className={`gap-1 border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-800 dark:bg-amber-950 dark:text-amber-300 ${className ?? ""}`}
+        className={`gap-1 border-primary/30 bg-primary/10 text-primary backdrop-blur-sm ${className ?? ""}`}
       >
         <Star className="size-3 fill-current" />
         Premium

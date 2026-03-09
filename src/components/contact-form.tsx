@@ -70,7 +70,7 @@ export function ContactForm() {
   if (status === "success") {
     return (
       <div className="flex flex-col items-center gap-4 py-12 text-center">
-        <CheckCircle2 className="size-12 text-green-600" />
+        <CheckCircle2 className="size-12 text-primary" />
         <h3 className="text-xl font-semibold text-foreground">
           Message Sent!
         </h3>

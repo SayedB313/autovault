@@ -64,7 +64,7 @@ export default async function StatePage({ params }: StatePageProps) {
         {/* Header */}
         <div className="bg-gradient-to-b from-muted/50 to-background">
           <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
-            <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+            <h1 className="font-serif text-3xl font-light tracking-tight text-foreground sm:text-4xl">
               Car Storage in {stateInfo.name}
             </h1>
             <p className="mt-4 text-lg text-muted-foreground max-w-3xl">
@@ -106,7 +106,7 @@ export default async function StatePage({ params }: StatePageProps) {
                 <Link
                   key={city.id}
                   href={`/${stateInfo.slug}/${city.slug}`}
-                  className="group flex items-center justify-between rounded-lg border bg-card p-4 shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5"
+                  className="group flex items-center justify-between rounded-lg border bg-card p-4 shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5 hover:ring-1 hover:ring-primary/30"
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     <MapPin className="size-5 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />

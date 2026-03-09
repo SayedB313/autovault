@@ -45,7 +45,7 @@ function StarRating({
 }) {
   return (
     <div className="flex items-center gap-1">
-      <Star className="size-3.5 fill-amber-400 text-amber-400" />
+      <Star className="size-3.5 fill-primary text-primary" />
       <span className="text-sm font-medium text-foreground">
         {rating.toFixed(1)}
       </span>
@@ -117,41 +117,50 @@ export function FacilityCard({ facility, className }: FacilityCardProps) {
     .map((t) => VEHICLE_TYPE_HIGHLIGHT[t])
     .filter(Boolean);
 
+  const isPremium = facility.tier === "PREMIUM";
+
   return (
     <Link
       href={`/facility/${facility.slug}`}
       className={cn("group block", className)}
     >
-      <Card className="overflow-hidden border-0 ring-1 ring-foreground/10 transition-shadow duration-200 hover:ring-foreground/20 hover:shadow-lg">
+      <Card className={cn(
+        "overflow-hidden border-0 bg-card ring-1 ring-border transition-all duration-300 hover:ring-primary/30 hover:shadow-lg hover:shadow-primary/5",
+        isPremium && "ring-primary/20"
+      )}>
         {/* Photo */}
         <div className="relative aspect-[16/10] w-full overflow-hidden">
           {primaryPhoto ? (
-            <Image
-              src={primaryPhoto.url}
-              alt={primaryPhoto.alt ?? facility.name}
-              fill
-              className="object-cover transition-transform duration-300 group-hover:scale-105"
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            />
+            <>
+              <Image
+                src={primaryPhoto.url}
+                alt={primaryPhoto.alt ?? facility.name}
+                fill
+                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              />
+              {/* Gradient overlay for smooth transition to content */}
+              <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-card to-transparent" />
+            </>
           ) : (
-            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900">
-              <MapPin className="size-8 text-muted-foreground/40" />
+            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-muted to-card">
+              <MapPin className="size-8 text-muted-foreground/30" />
             </div>
           )}
 
           {/* Tier badge overlay */}
           {facility.tier !== "FREE" && (
-            <div className="absolute top-2 left-2">
+            <div className="absolute top-3 left-3">
               <TierBadge tier={facility.tier} />
             </div>
           )}
         </div>
 
         {/* Content */}
-        <CardContent className="space-y-2 px-4 pt-3 pb-4">
+        <CardContent className="space-y-2.5 px-4 pt-3 pb-4">
           {/* Name + Location */}
           <div>
-            <h3 className="truncate text-base font-semibold leading-snug text-foreground group-hover:text-primary">
+            <h3 className="truncate text-base font-semibold leading-snug text-foreground group-hover:text-primary transition-colors">
               {facility.name}
             </h3>
             <p className="flex items-center gap-1 text-sm text-muted-foreground">
@@ -193,7 +202,7 @@ export function FacilityCard({ facility, className }: FacilityCardProps) {
               <Badge
                 key={label}
                 variant="outline"
-                className="text-[11px] font-normal"
+                className="text-[11px] font-normal border-primary/20 text-primary/80"
               >
                 {label}
               </Badge>

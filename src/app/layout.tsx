@@ -1,11 +1,18 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 import { Providers } from "@/components/providers";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import "./globals.css";
 
-const inter = Inter({
+const serif = Cormorant_Garamond({
+  variable: "--font-serif",
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["300", "400", "500", "600", "700"],
+});
+
+const sans = DM_Sans({
   variable: "--font-sans",
   subsets: ["latin"],
   display: "swap",
@@ -46,7 +53,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} font-sans antialiased`}>
+      <body className={`${sans.variable} ${serif.variable} font-sans antialiased`}>
         <Providers>
           <div className="flex min-h-screen flex-col">
             <Header />

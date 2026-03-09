@@ -134,7 +134,7 @@ export default async function CityPage({ params }: CityPageProps) {
                 {city.name}, {stateInfo.name}
               </span>
             </div>
-            <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+            <h1 className="font-serif text-3xl font-light tracking-tight text-foreground sm:text-4xl">
               Car Storage in {city.name}, {stateInfo.abbreviation}
             </h1>
             <p className="mt-4 text-lg text-muted-foreground max-w-3xl">
@@ -180,7 +180,7 @@ export default async function CityPage({ params }: CityPageProps) {
         <div className="border-t bg-muted/30">
           <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
             <div className="max-w-3xl space-y-4 text-sm text-muted-foreground leading-relaxed">
-              <h2 className="text-lg font-semibold text-foreground">
+              <h2 className="font-serif text-xl font-light text-foreground">
                 Car Storage in {city.name}, {stateInfo.name}
               </h2>
               <p>

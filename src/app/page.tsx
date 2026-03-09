@@ -11,10 +11,12 @@ import {
   ArrowRight,
   MapPin,
   Star,
+  ChevronDown,
 } from "lucide-react";
 import { prisma } from "@/lib/db";
 import { SearchBar } from "@/components/search-bar";
 import { FacilityCard } from "@/components/facility-card";
+import { AnimateOnScroll } from "@/components/animate-on-scroll";
 import { Button } from "@/components/ui/button";
 
 export const dynamic = "force-dynamic";
@@ -38,32 +40,24 @@ const STORAGE_TYPES = [
     value: "INDOOR",
     icon: Warehouse,
     description: "Protected from the elements in fully enclosed buildings",
-    color: "bg-blue-50 text-blue-700 border-blue-200",
-    iconColor: "text-blue-600",
   },
   {
     label: "Outdoor",
     value: "OUTDOOR",
     icon: Sun,
     description: "Affordable open-air parking with security",
-    color: "bg-amber-50 text-amber-700 border-amber-200",
-    iconColor: "text-amber-600",
   },
   {
     label: "Climate Controlled",
     value: "CLIMATE_CONTROLLED",
     icon: Thermometer,
     description: "Temperature and humidity regulated environments",
-    color: "bg-emerald-50 text-emerald-700 border-emerald-200",
-    iconColor: "text-emerald-600",
   },
   {
     label: "Luxury",
     value: "ENCLOSED",
     icon: Crown,
     description: "Premium storage for exotic and collector vehicles",
-    color: "bg-purple-50 text-purple-700 border-purple-200",
-    iconColor: "text-purple-600",
   },
 ];
 
@@ -106,8 +100,7 @@ export default async function HomePage() {
     }),
   ]);
 
-  // JSON-LD structured data for homepage (WebSite + SearchAction)
-  // Content is static/server-generated - safe for dangerouslySetInnerHTML
+  /* JSON-LD: server-generated static schema — safe for raw injection */
   const websiteJsonLd = {
     "@context": "https://schema.org",
     "@type": "WebSite",
@@ -128,95 +121,113 @@ export default async function HomePage() {
     <>
       <script
         type="application/ld+json"
+        // eslint-disable-next-line react/no-danger -- static server-generated SEO schema
         dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
       />
-      {/* Hero Section */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wMyI+PHBhdGggZD0iTTM2IDM0aDR2MWgtNHYtMXptMC0yaDR2MWgtNHYtMXptMC0yaDR2MWgtNHYtMXoiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-40" />
-          <div className="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-32 lg:px-8 lg:py-40">
-            <div className="mx-auto max-w-3xl text-center">
-              <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
-                Find Car Storage{" "}
-                <span className="bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">
-                  Near You
-                </span>
-              </h1>
-              <p className="mt-6 text-lg leading-8 text-slate-300 sm:text-xl">
-                Browse 2,000+ car storage facilities across the United States.
-                Compare pricing, amenities, and reviews to find the perfect spot
-                for your vehicle.
-              </p>
-              <div className="mt-10 flex justify-center">
-                <SearchBar />
-              </div>
-              <div className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-slate-400">
-                <span className="flex items-center gap-1.5">
-                  <MapPin className="size-4" />
-                  2,000+ Facilities
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <Star className="size-4" />
-                  Verified Reviews
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <Search className="size-4" />
-                  Free to Search
-                </span>
-              </div>
-            </div>
-          </div>
-        </section>
 
-        {/* Browse by Storage Type */}
-        <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
-          <div className="text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-              Browse by Storage Type
-            </h2>
-            <p className="mt-4 text-lg text-muted-foreground">
-              Find the right type of storage for your vehicle
+      {/* ── Hero Section ── */}
+      <section className="relative flex min-h-[90vh] items-center justify-center overflow-hidden">
+        {/* Background layers */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,oklch(0.18_0.01_85)_0%,oklch(0.08_0_0)_70%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,oklch(0.20_0.03_85)_0%,transparent_50%)] opacity-40" />
+
+        <div className="relative mx-auto max-w-4xl px-4 py-24 text-center sm:px-6 lg:px-8">
+          <div className="animate-fade-in-up">
+            <p className="mb-6 text-xs font-medium uppercase tracking-[0.3em] text-primary">
+              The Premier Car Storage Network
+            </p>
+            <h1 className="font-serif text-5xl font-light leading-[1.1] tracking-tight text-foreground sm:text-6xl lg:text-7xl">
+              Where Exceptional Cars{" "}
+              <span className="text-primary">Find Their Home</span>
+            </h1>
+            <p className="mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-foreground/60">
+              Browse 2,000+ curated car storage facilities. Compare
+              climate-controlled, luxury, and secure storage options for your
+              prized vehicle.
             </p>
           </div>
-          <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {STORAGE_TYPES.map((type) => (
+
+          <div className="mx-auto mt-12 max-w-2xl animate-fade-in-up" style={{ animationDelay: "0.15s" }}>
+            <SearchBar />
+          </div>
+
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-foreground/40 animate-fade-in-up" style={{ animationDelay: "0.3s" }}>
+            <span className="flex items-center gap-2">
+              <MapPin className="size-3.5" />
+              2,000+ Facilities
+            </span>
+            <span className="hidden h-4 w-px bg-border sm:block" />
+            <span className="flex items-center gap-2">
+              <Star className="size-3.5" />
+              Verified Reviews
+            </span>
+            <span className="hidden h-4 w-px bg-border sm:block" />
+            <span className="flex items-center gap-2">
+              <Search className="size-3.5" />
+              Free to Search
+            </span>
+          </div>
+        </div>
+
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
+          <ChevronDown className="size-5 text-primary/40 animate-scroll-hint" />
+        </div>
+      </section>
+
+      {/* ── Browse by Storage Type ── */}
+      <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
+        <AnimateOnScroll className="text-center">
+          <h2 className="font-serif text-3xl font-light tracking-tight text-foreground sm:text-4xl">
+            Browse by Storage Type
+          </h2>
+          <p className="mt-4 text-muted-foreground">
+            Find the right type of storage for your vehicle
+          </p>
+        </AnimateOnScroll>
+        <div className="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {STORAGE_TYPES.map((type, i) => (
+            <AnimateOnScroll key={type.value} delay={i * 100}>
               <Link
-                key={type.value}
                 href={`/search?storageType=${type.value}`}
-                className={`group relative flex flex-col items-center rounded-xl border p-8 text-center transition-all hover:shadow-lg hover:-translate-y-1 ${type.color}`}
+                className="group relative flex flex-col items-center rounded-xl bg-card p-8 text-center ring-1 ring-border transition-all duration-300 hover:ring-primary/30 hover:shadow-lg hover:shadow-primary/5"
               >
-                <div
-                  className={`flex size-14 items-center justify-center rounded-xl bg-white/80 shadow-sm ${type.iconColor}`}
-                >
+                <div className="flex size-14 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary/20">
                   <type.icon className="size-7" />
                 </div>
-                <h3 className="mt-4 text-lg font-semibold">{type.label}</h3>
-                <p className="mt-2 text-sm opacity-80">{type.description}</p>
-                <ArrowRight className="mt-4 size-5 opacity-0 transition-all group-hover:opacity-100" />
-              </Link>
-            ))}
-          </div>
-        </section>
-
-        {/* Popular Cities */}
-        {popularCities.length > 0 && (
-          <section className="bg-muted/50 py-16 sm:py-24">
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-              <div className="text-center">
-                <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-                  Popular Cities
-                </h2>
-                <p className="mt-4 text-lg text-muted-foreground">
-                  Explore car storage options in top cities across the US
+                <h3 className="mt-5 text-lg font-semibold text-foreground">
+                  {type.label}
+                </h3>
+                <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
+                  {type.description}
                 </p>
-              </div>
-              <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-                {popularCities.map((city) => (
+                <ArrowRight className="mt-4 size-4 text-primary opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-1" />
+              </Link>
+            </AnimateOnScroll>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Popular Cities ── */}
+      {popularCities.length > 0 && (
+        <section className="bg-card py-20 sm:py-28">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <AnimateOnScroll className="text-center">
+              <h2 className="font-serif text-3xl font-light tracking-tight text-foreground sm:text-4xl">
+                Popular Cities
+              </h2>
+              <p className="mt-4 text-muted-foreground">
+                Explore car storage options in top cities across the US
+              </p>
+            </AnimateOnScroll>
+            <div className="mt-14 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+              {popularCities.map((city, i) => (
+                <AnimateOnScroll key={city.id} delay={i * 50}>
                   <Link
-                    key={city.id}
                     href={`/${city.stateSlug}/${city.slug}`}
-                    className="group flex flex-col items-center rounded-lg border bg-card p-4 text-center shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5"
+                    className="group flex flex-col items-center rounded-lg bg-muted p-4 text-center ring-1 ring-border transition-all duration-300 hover:ring-primary/20"
                   >
-                    <MapPin className="size-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                    <MapPin className="size-4 text-muted-foreground group-hover:text-primary transition-colors" />
                     <span className="mt-2 font-medium text-sm text-foreground">
                       {city.name}
                     </span>
@@ -228,96 +239,102 @@ export default async function HomePage() {
                       {city.facilityCount === 1 ? "facility" : "facilities"}
                     </span>
                   </Link>
-                ))}
-              </div>
-              <div className="mt-10 text-center">
-                <Link href="/search">
-                  <Button variant="outline" size="lg">
-                    View All Locations
-                    <ArrowRight className="ml-2 size-4" />
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* Featured Facilities */}
-        {featuredFacilities.length > 0 && (
-          <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
-            <div className="text-center">
-              <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-                Featured Facilities
-              </h2>
-              <p className="mt-4 text-lg text-muted-foreground">
-                Top-rated premium car storage facilities
-              </p>
-            </div>
-            <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {featuredFacilities.map((facility) => (
-                <FacilityCard key={facility.id} facility={facility} />
+                </AnimateOnScroll>
               ))}
             </div>
-            <div className="mt-10 text-center">
-              <Link href="/search?tier=PREMIUM">
-                <Button variant="outline" size="lg">
-                  View All Premium Facilities
+            <div className="mt-12 text-center">
+              <Link href="/search">
+                <Button variant="outline" size="lg" className="px-8">
+                  View All Locations
                   <ArrowRight className="ml-2 size-4" />
                 </Button>
               </Link>
             </div>
-          </section>
-        )}
-
-        {/* How It Works */}
-        <section className="bg-muted/50 py-16 sm:py-24">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="text-center">
-              <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-                How It Works
-              </h2>
-              <p className="mt-4 text-lg text-muted-foreground">
-                Finding the right car storage is easy with AutoVault
-              </p>
-            </div>
-            <div className="mt-16 grid grid-cols-1 gap-12 md:grid-cols-3">
-              {HOW_IT_WORKS.map((item) => (
-                <div key={item.step} className="relative text-center">
-                  <div className="mx-auto flex size-16 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg">
-                    <item.icon className="size-8" />
-                  </div>
-                  <div className="absolute -top-2 left-1/2 ml-8 flex size-7 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white">
-                    {item.step}
-                  </div>
-                  <h3 className="mt-6 text-xl font-semibold text-foreground">
-                    {item.title}
-                  </h3>
-                  <p className="mt-3 text-muted-foreground leading-relaxed">
-                    {item.description}
-                  </p>
-                </div>
-              ))}
-            </div>
           </div>
         </section>
+      )}
 
-        {/* For Facility Owners CTA */}
-        <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
-          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary to-blue-700 px-8 py-16 text-center shadow-xl sm:px-16">
+      {/* ── Featured Facilities ── */}
+      {featuredFacilities.length > 0 && (
+        <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
+          <AnimateOnScroll className="text-center">
+            <div className="mx-auto mb-6 h-px w-12 bg-primary" />
+            <h2 className="font-serif text-3xl font-light tracking-tight text-foreground sm:text-4xl">
+              Featured Facilities
+            </h2>
+            <p className="mt-4 text-muted-foreground">
+              Top-rated premium car storage facilities
+            </p>
+          </AnimateOnScroll>
+          <div className="mt-14 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {featuredFacilities.map((facility, i) => (
+              <AnimateOnScroll key={facility.id} delay={i * 100}>
+                <FacilityCard facility={facility} />
+              </AnimateOnScroll>
+            ))}
+          </div>
+          <div className="mt-12 text-center">
+            <Link href="/search?tier=PREMIUM">
+              <Button variant="outline" size="lg" className="px-8">
+                View All Premium Facilities
+                <ArrowRight className="ml-2 size-4" />
+              </Button>
+            </Link>
+          </div>
+        </section>
+      )}
+
+      {/* ── How It Works ── */}
+      <section className="bg-card py-20 sm:py-28">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <AnimateOnScroll className="text-center">
+            <h2 className="font-serif text-3xl font-light tracking-tight text-foreground sm:text-4xl">
+              How It Works
+            </h2>
+            <p className="mt-4 text-muted-foreground">
+              Finding the right car storage is easy with AutoVault
+            </p>
+          </AnimateOnScroll>
+          <div className="mt-16 grid grid-cols-1 gap-12 md:grid-cols-3">
+            {HOW_IT_WORKS.map((item, i) => (
+              <AnimateOnScroll key={item.step} delay={i * 150} className="relative text-center">
+                <div className="mx-auto flex size-16 items-center justify-center rounded-2xl bg-muted text-foreground ring-1 ring-border">
+                  <item.icon className="size-7" />
+                </div>
+                <div className="absolute -top-2 left-1/2 ml-8 flex size-7 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
+                  {item.step}
+                </div>
+                <h3 className="mt-6 text-xl font-semibold text-foreground">
+                  {item.title}
+                </h3>
+                <p className="mt-3 text-muted-foreground leading-relaxed">
+                  {item.description}
+                </p>
+              </AnimateOnScroll>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── For Facility Owners CTA ── */}
+      <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
+        <AnimateOnScroll>
+          <div className="relative overflow-hidden rounded-2xl bg-card px-8 py-20 text-center ring-1 ring-border sm:px-16">
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,oklch(0.20_0.02_85)_0%,transparent_70%)] opacity-50" />
             <div className="relative z-10">
-              <h2 className="text-3xl font-bold tracking-tight text-primary-foreground sm:text-4xl">
+              <h2 className="font-serif text-3xl font-light tracking-tight text-foreground sm:text-4xl">
                 Own a Car Storage Facility?
               </h2>
-              <p className="mt-4 text-lg text-primary-foreground/80 max-w-2xl mx-auto">
+              <p className="mt-6 text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
                 List your facility on AutoVault for free and reach thousands of
                 car owners looking for storage. Upgrade to get verified status,
                 premium placement, and lead management tools.
               </p>
-              <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
                 <Link href="/claim">
                   <Button
                     size="lg"
-                    className="bg-white text-primary hover:bg-white/90 font-semibold px-8"
+                    className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold px-8"
                   >
                     List Your Facility for Free
                     <ArrowRight className="ml-2 size-4" />
@@ -327,16 +344,16 @@ export default async function HomePage() {
                   <Button
                     variant="outline"
                     size="lg"
-                    className="border-white/30 text-primary-foreground hover:bg-white/10 px-8"
+                    className="px-8"
                   >
                     View Pricing Plans
                   </Button>
                 </Link>
               </div>
             </div>
-            <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDM0aDR2MWgtNHYtMXptMC0yaDR2MWgtNHYtMXptMC0yaDR2MWgtNHYtMXoiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-50" />
           </div>
-        </section>
+        </AnimateOnScroll>
+      </section>
     </>
   );
 }

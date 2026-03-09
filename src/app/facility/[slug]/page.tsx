@@ -200,7 +200,7 @@ export default async function FacilityPage({ params }: FacilityPageProps) {
               {/* Header */}
               <div>
                 <div className="flex flex-wrap items-start gap-3">
-                  <h1 className="text-3xl font-bold text-foreground">
+                  <h1 className="font-serif text-3xl font-light tracking-tight text-foreground">
                     {facility.name}
                   </h1>
                   <TierBadge tier={facility.tier} />
@@ -215,7 +215,7 @@ export default async function FacilityPage({ params }: FacilityPageProps) {
                             key={i}
                             className={`size-4 ${
                               i < Math.round(facility.avgRating)
-                                ? "fill-amber-400 text-amber-400"
+                                ? "fill-primary text-primary"
                                 : "fill-muted text-muted"
                             }`}
                           />
@@ -243,7 +243,7 @@ export default async function FacilityPage({ params }: FacilityPageProps) {
               {/* Description */}
               {facility.description && (
                 <div>
-                  <h2 className="text-lg font-semibold text-foreground">
+                  <h2 className="font-serif text-xl font-light text-foreground">
                     About This Facility
                   </h2>
                   <p className="mt-3 leading-relaxed text-muted-foreground whitespace-pre-line">
@@ -257,7 +257,7 @@ export default async function FacilityPage({ params }: FacilityPageProps) {
               {/* Storage Types */}
               {facility.storageTypes.length > 0 && (
                 <div>
-                  <h2 className="text-lg font-semibold text-foreground">
+                  <h2 className="font-serif text-xl font-light text-foreground">
                     Storage Types
                   </h2>
                   <div className="mt-3 flex flex-wrap gap-2">
@@ -273,7 +273,7 @@ export default async function FacilityPage({ params }: FacilityPageProps) {
               {/* Vehicle Types */}
               {facility.vehicleTypes.length > 0 && (
                 <div>
-                  <h2 className="text-lg font-semibold text-foreground">
+                  <h2 className="font-serif text-xl font-light text-foreground">
                     Vehicle Types Accepted
                   </h2>
                   <div className="mt-3 flex flex-wrap gap-2">
@@ -289,7 +289,7 @@ export default async function FacilityPage({ params }: FacilityPageProps) {
               {/* Amenities */}
               {facility.amenities.length > 0 && (
                 <div>
-                  <h2 className="text-lg font-semibold text-foreground">
+                  <h2 className="font-serif text-xl font-light text-foreground">
                     Amenities
                   </h2>
                   <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
@@ -298,7 +298,7 @@ export default async function FacilityPage({ params }: FacilityPageProps) {
                         key={amenity}
                         className="flex items-center gap-2 text-sm text-muted-foreground"
                       >
-                        <Shield className="size-4 text-green-600 shrink-0" />
+                        <Shield className="size-4 text-primary shrink-0" />
                         {AMENITY_LABELS[amenity] || amenity}
                       </div>
                     ))}
@@ -312,7 +312,7 @@ export default async function FacilityPage({ params }: FacilityPageProps) {
               {(facility.priceRangeMin !== null ||
                 facility.priceRangeMax !== null) && (
                 <div>
-                  <h2 className="text-lg font-semibold text-foreground">
+                  <h2 className="font-serif text-xl font-light text-foreground">
                     Pricing
                   </h2>
                   <div className="mt-3 rounded-lg border bg-muted/30 p-4">
@@ -344,7 +344,7 @@ export default async function FacilityPage({ params }: FacilityPageProps) {
               {/* Hours */}
               {hours && Object.keys(hours).length > 0 && (
                 <div>
-                  <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
+                  <h2 className="font-serif text-xl font-light text-foreground flex items-center gap-2">
                     <Clock className="size-5" />
                     Hours of Operation
                   </h2>
@@ -369,7 +369,7 @@ export default async function FacilityPage({ params }: FacilityPageProps) {
 
               {/* Map */}
               <div>
-                <h2 className="text-lg font-semibold text-foreground">
+                <h2 className="font-serif text-xl font-light text-foreground">
                   Location
                 </h2>
                 <div className="mt-3 overflow-hidden rounded-lg border aspect-[8/3] bg-muted flex items-center justify-center">
@@ -406,7 +406,7 @@ export default async function FacilityPage({ params }: FacilityPageProps) {
 
               {/* Reviews */}
               <div>
-                <h2 className="text-lg font-semibold text-foreground">
+                <h2 className="font-serif text-xl font-light text-foreground">
                   Reviews
                   {facility.reviewCount > 0 && (
                     <span className="ml-2 text-base font-normal text-muted-foreground">
@@ -462,7 +462,7 @@ export default async function FacilityPage({ params }: FacilityPageProps) {
                                 key={i}
                                 className={`size-4 ${
                                   i < review.rating
-                                    ? "fill-amber-400 text-amber-400"
+                                    ? "fill-primary text-primary"
                                     : "fill-muted text-muted"
                                 }`}
                               />
@@ -491,7 +491,7 @@ export default async function FacilityPage({ params }: FacilityPageProps) {
               <div className="sticky top-4 space-y-6">
                 {/* Contact Info Card */}
                 <div className="rounded-xl border bg-card p-6 shadow-sm">
-                  <h3 className="font-semibold text-foreground">
+                  <h3 className="font-serif text-lg font-light text-foreground">
                     Contact Information
                   </h3>
                   <div className="mt-4 space-y-3">
@@ -532,7 +532,7 @@ export default async function FacilityPage({ params }: FacilityPageProps) {
 
                 {/* Contact Form */}
                 <div className="rounded-xl border bg-card p-6 shadow-sm">
-                  <h3 className="font-semibold text-foreground">
+                  <h3 className="font-serif text-lg font-light text-foreground">
                     Contact This Facility
                   </h3>
                   <p className="mt-1 text-sm text-muted-foreground">
@@ -545,9 +545,9 @@ export default async function FacilityPage({ params }: FacilityPageProps) {
 
                 {/* Claim Listing */}
                 {!facility.claimedById && (
-                  <div className="rounded-xl border border-dashed bg-muted/30 p-6 text-center">
-                    <Shield className="mx-auto size-8 text-muted-foreground" />
-                    <h3 className="mt-3 font-semibold text-foreground">
+                  <div className="rounded-xl border border-primary/20 bg-primary/5 p-6 text-center">
+                    <Shield className="mx-auto size-8 text-primary" />
+                    <h3 className="mt-3 font-serif text-lg font-light text-foreground">
                       Is this your facility?
                     </h3>
                     <p className="mt-1 text-sm text-muted-foreground">

@@ -43,7 +43,7 @@ export default function AboutPage() {
         <section className="bg-gradient-to-b from-muted/50 to-background">
           <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
             <div className="mx-auto max-w-3xl text-center">
-              <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+              <h1 className="font-serif text-4xl font-light tracking-tight text-foreground sm:text-5xl">
                 About AutoVault
               </h1>
               <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
@@ -59,7 +59,7 @@ export default function AboutPage() {
         {/* Mission */}
         <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl">
-            <h2 className="text-2xl font-bold tracking-tight text-foreground">
+            <h2 className="font-serif text-2xl font-light tracking-tight text-foreground">
               Our Mission
             </h2>
             <div className="mt-6 space-y-4 text-muted-foreground leading-relaxed">
@@ -91,7 +91,7 @@ export default function AboutPage() {
         <section className="bg-muted/50 py-16 sm:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center">
-              <h2 className="text-3xl font-bold tracking-tight text-foreground">
+              <h2 className="font-serif text-3xl font-light tracking-tight text-foreground">
                 What We Stand For
               </h2>
             </div>
@@ -121,7 +121,7 @@ export default function AboutPage() {
         {/* Team Placeholder */}
         <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
           <div className="mx-auto max-w-3xl text-center">
-            <h2 className="text-2xl font-bold tracking-tight text-foreground">
+            <h2 className="font-serif text-2xl font-light tracking-tight text-foreground">
               Our Team
             </h2>
             <p className="mt-4 text-muted-foreground">
@@ -135,35 +135,38 @@ export default function AboutPage() {
         </section>
 
         {/* CTA */}
-        <section className="bg-muted/50 py-16 sm:py-24">
+        <section className="py-16 sm:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="rounded-2xl bg-gradient-to-r from-primary to-blue-700 px-8 py-12 text-center shadow-xl sm:px-16">
-              <h2 className="text-2xl font-bold text-primary-foreground sm:text-3xl">
-                Ready to Find Storage for Your Vehicle?
-              </h2>
-              <p className="mt-4 text-primary-foreground/80 max-w-xl mx-auto">
-                Search our directory of 2,000+ car storage facilities across the
-                United States.
-              </p>
-              <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-                <Link href="/search">
-                  <Button
-                    size="lg"
-                    className="bg-white text-primary hover:bg-white/90 font-semibold px-8"
-                  >
-                    Search Facilities
-                    <ArrowRight className="ml-2 size-4" />
-                  </Button>
-                </Link>
-                <Link href="/contact">
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="border-white/30 text-primary-foreground hover:bg-white/10 px-8"
-                  >
-                    Contact Us
-                  </Button>
-                </Link>
+            <div className="relative overflow-hidden rounded-2xl bg-card px-8 py-16 text-center ring-1 ring-border sm:px-16">
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,oklch(0.20_0.02_85)_0%,transparent_70%)] opacity-50" />
+              <div className="relative z-10">
+                <h2 className="font-serif text-2xl font-light tracking-tight text-foreground sm:text-3xl">
+                  Ready to Find Storage for Your Vehicle?
+                </h2>
+                <p className="mt-4 text-muted-foreground max-w-xl mx-auto">
+                  Search our directory of 2,000+ car storage facilities across the
+                  United States.
+                </p>
+                <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+                  <Link href="/search">
+                    <Button
+                      size="lg"
+                      className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold px-8"
+                    >
+                      Search Facilities
+                      <ArrowRight className="ml-2 size-4" />
+                    </Button>
+                  </Link>
+                  <Link href="/contact">
+                    <Button
+                      variant="outline"
+                      size="lg"
+                      className="px-8"
+                    >
+                      Contact Us
+                    </Button>
+                  </Link>
+                </div>
               </div>
             </div>
           </div>

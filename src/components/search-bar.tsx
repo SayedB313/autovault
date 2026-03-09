@@ -36,7 +36,7 @@ export function SearchBar({
   return (
     <form
       onSubmit={handleSubmit}
-      className={`flex w-full items-center gap-2 rounded-xl bg-white p-1.5 shadow-md ring-1 ring-foreground/10 dark:bg-card ${className ?? ""}`}
+      className={`flex w-full items-center gap-2 rounded-xl bg-card/80 p-1.5 shadow-lg shadow-black/20 ring-1 ring-border backdrop-blur-md transition-all focus-within:ring-primary/40 ${className ?? ""}`}
     >
       <div className="relative flex-1">
         <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -45,11 +45,11 @@ export function SearchBar({
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder={placeholder}
-          className="border-0 pl-9 shadow-none focus-visible:ring-0"
+          className="border-0 bg-transparent pl-9 shadow-none focus-visible:ring-0 text-foreground placeholder:text-muted-foreground/60"
           aria-label="Search facilities"
         />
       </div>
-      <Button type="submit" size="lg" className="shrink-0 px-6">
+      <Button type="submit" size="lg" className="shrink-0 px-6 bg-primary text-primary-foreground hover:bg-primary/90">
         Search
       </Button>
     </form>

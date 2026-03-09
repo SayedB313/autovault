@@ -173,7 +173,7 @@ export default function PricingPage() {
         <section className="bg-gradient-to-b from-muted/50 to-background">
           <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
             <div className="mx-auto max-w-3xl text-center">
-              <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+              <h1 className="font-serif text-4xl font-light tracking-tight text-foreground sm:text-5xl">
                 Simple, Transparent Pricing
               </h1>
               <p className="mt-6 text-lg text-muted-foreground">
@@ -205,7 +205,7 @@ export default function PricingPage() {
                 )}
 
                 <div className="text-center">
-                  <h3 className="text-xl font-semibold text-foreground">
+                  <h3 className="font-serif text-xl font-light text-foreground">
                     {plan.name}
                   </h3>
                   <div className="mt-4">
@@ -238,7 +238,7 @@ export default function PricingPage() {
                         }`}
                       >
                         {included ? (
-                          <Check className="size-4 shrink-0 text-green-600 mt-0.5" />
+                          <Check className="size-4 shrink-0 text-primary mt-0.5" />
                         ) : (
                           <X className="size-4 shrink-0 mt-0.5" />
                         )}
@@ -275,7 +275,7 @@ export default function PricingPage() {
         {/* Feature Comparison Table */}
         <section className="bg-muted/50 py-16 sm:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl font-bold tracking-tight text-foreground text-center">
+            <h2 className="font-serif text-2xl font-light tracking-tight text-foreground text-center">
               Feature Comparison
             </h2>
             <div className="mt-10 overflow-x-auto">
@@ -307,7 +307,7 @@ export default function PricingPage() {
                         return (
                           <td key={tier} className="px-4 py-3 text-center">
                             {value === true ? (
-                              <Check className="mx-auto size-4 text-green-600" />
+                              <Check className="mx-auto size-4 text-primary" />
                             ) : value === false ? (
                               <X className="mx-auto size-4 text-muted-foreground/40" />
                             ) : (
@@ -329,7 +329,7 @@ export default function PricingPage() {
         {/* FAQ */}
         <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
           <div className="mx-auto max-w-3xl">
-            <h2 className="text-2xl font-bold tracking-tight text-foreground text-center flex items-center justify-center gap-2">
+            <h2 className="font-serif text-2xl font-light tracking-tight text-foreground text-center flex items-center justify-center gap-2">
               <HelpCircle className="size-6" />
               Frequently Asked Questions
             </h2>
@@ -351,7 +351,7 @@ export default function PricingPage() {
         {/* CTA */}
         <section className="bg-muted/50 py-16">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="text-2xl font-bold text-foreground">
+            <h2 className="font-serif text-2xl font-light text-foreground">
               Ready to get started?
             </h2>
             <p className="mt-3 text-muted-foreground">

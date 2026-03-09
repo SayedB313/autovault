@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { prisma } from "@/lib/db";
 import { FacilityCard } from "@/components/facility-card";
+import { AnimateOnScroll } from "@/components/animate-on-scroll";
 import { Button } from "@/components/ui/button";
 
 export const dynamic = "force-dynamic";
@@ -87,114 +88,110 @@ export default async function LuxuryCarStoragePage() {
   return (
     <>
       {/* Hero Section */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800">
-          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wMiI+PHBhdGggZD0iTTM2IDM0aDR2MWgtNHYtMXptMC0yaDR2MWgtNHYtMXptMC0yaDR2MWgtNHYtMXoiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-50" />
-          <div className="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-32 lg:px-8 lg:py-40">
-            <div className="mx-auto max-w-3xl text-center">
-              <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-1.5 text-sm font-medium text-amber-400 mb-6">
-                <Star className="size-4 fill-amber-400" />
-                Premium Vehicle Storage
-              </div>
-              <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
-                Luxury Car{" "}
-                <span className="bg-gradient-to-r from-amber-300 to-amber-500 bg-clip-text text-transparent">
-                  Storage
-                </span>
-              </h1>
-              <p className="mt-6 text-lg leading-8 text-slate-300 sm:text-xl">
-                Premium climate-controlled facilities with concierge service for
-                exotic, classic, and collector vehicles. Your prized automobile
-                deserves world-class care.
-              </p>
-              <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-                <Link href="/search?vehicleType=EXOTIC,CLASSIC&storageType=CLIMATE_CONTROLLED">
-                  <Button
-                    size="lg"
-                    className="bg-amber-500 text-slate-900 hover:bg-amber-400 font-semibold px-8"
-                  >
-                    Find Luxury Storage
-                    <ArrowRight className="ml-2 size-4" />
-                  </Button>
-                </Link>
-                <Link href="/pricing">
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="border-slate-600 text-slate-300 hover:bg-slate-800 px-8"
-                  >
-                    View Premium Plans
-                  </Button>
-                </Link>
-              </div>
+      <section className="relative flex min-h-[70vh] items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,oklch(0.18_0.02_85)_0%,oklch(0.08_0_0)_70%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,oklch(0.22_0.04_85)_0%,transparent_50%)] opacity-30" />
+        <div className="relative mx-auto max-w-4xl px-4 py-24 text-center sm:px-6 lg:px-8">
+          <div className="animate-fade-in-up">
+            <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary mb-8">
+              <Star className="size-4 fill-current" />
+              Premium Vehicle Storage
             </div>
-          </div>
-        </section>
-
-        {/* Intro Section */}
-        <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
-          <div className="mx-auto max-w-3xl text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-              Storage Designed for High-Value Vehicles
-            </h2>
-            <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
-              Standard parking garages and driveways expose your investment to
-              the elements, theft, and accidental damage. Luxury car storage
-              facilities provide purpose-built environments with precise
-              temperature control, advanced security systems, and professional
-              staff dedicated to preserving the condition and value of your
-              vehicle.
+            <h1 className="font-serif text-5xl font-light leading-[1.1] tracking-tight text-foreground sm:text-6xl lg:text-7xl">
+              Luxury Car{" "}
+              <span className="text-primary">Storage</span>
+            </h1>
+            <p className="mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-foreground/60">
+              Premium climate-controlled facilities with concierge service for
+              exotic, classic, and collector vehicles. Your prized automobile
+              deserves world-class care.
             </p>
           </div>
-        </section>
-
-        {/* Featured Luxury Facilities */}
-        {luxuryFacilities.length > 0 && (
-          <section className="bg-muted/50 py-16 sm:py-24">
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-              <div className="text-center">
-                <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-                  Featured Luxury Facilities
-                </h2>
-                <p className="mt-4 text-lg text-muted-foreground">
-                  Verified and premium-tier facilities specializing in exotic and
-                  classic vehicle storage
-                </p>
-              </div>
-              <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {luxuryFacilities.map((facility) => (
-                  <FacilityCard key={facility.id} facility={facility} />
-                ))}
-              </div>
-              <div className="mt-10 text-center">
-                <Link href="/search?vehicleType=EXOTIC,CLASSIC">
-                  <Button variant="outline" size="lg">
-                    View All Luxury Facilities
-                    <ArrowRight className="ml-2 size-4" />
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* What to Look For */}
-        <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
-          <div className="text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-              What to Look For in Luxury Storage
-            </h2>
-            <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
-              Not all car storage is created equal. Here are the key features to
-              look for when storing a high-value vehicle.
-            </p>
-          </div>
-          <div className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {CHECKLIST_ITEMS.map((item) => (
-              <div
-                key={item.title}
-                className="flex gap-4 rounded-xl border bg-card p-6 shadow-sm"
+          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row animate-fade-in-up" style={{ animationDelay: "0.15s" }}>
+            <Link href="/search?vehicleType=EXOTIC,CLASSIC&storageType=CLIMATE_CONTROLLED">
+              <Button
+                size="lg"
+                className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold px-8"
               >
-                <div className="flex size-12 shrink-0 items-center justify-center rounded-lg bg-amber-50 text-amber-600">
+                Find Luxury Storage
+                <ArrowRight className="ml-2 size-4" />
+              </Button>
+            </Link>
+            <Link href="/pricing">
+              <Button variant="outline" size="lg" className="px-8">
+                View Premium Plans
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Intro Section */}
+      <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
+        <AnimateOnScroll className="mx-auto max-w-3xl text-center">
+          <h2 className="font-serif text-3xl font-light tracking-tight text-foreground sm:text-4xl">
+            Storage Designed for High-Value Vehicles
+          </h2>
+          <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
+            Standard parking garages and driveways expose your investment to
+            the elements, theft, and accidental damage. Luxury car storage
+            facilities provide purpose-built environments with precise
+            temperature control, advanced security systems, and professional
+            staff dedicated to preserving the condition and value of your
+            vehicle.
+          </p>
+        </AnimateOnScroll>
+      </section>
+
+      {/* Featured Luxury Facilities */}
+      {luxuryFacilities.length > 0 && (
+        <section className="bg-card py-20 sm:py-28">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <AnimateOnScroll className="text-center">
+              <div className="mx-auto mb-6 h-px w-12 bg-primary" />
+              <h2 className="font-serif text-3xl font-light tracking-tight text-foreground sm:text-4xl">
+                Featured Luxury Facilities
+              </h2>
+              <p className="mt-4 text-muted-foreground">
+                Verified and premium-tier facilities specializing in exotic and
+                classic vehicle storage
+              </p>
+            </AnimateOnScroll>
+            <div className="mt-14 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {luxuryFacilities.map((facility, i) => (
+                <AnimateOnScroll key={facility.id} delay={i * 100}>
+                  <FacilityCard facility={facility} />
+                </AnimateOnScroll>
+              ))}
+            </div>
+            <div className="mt-12 text-center">
+              <Link href="/search?vehicleType=EXOTIC,CLASSIC">
+                <Button variant="outline" size="lg" className="px-8">
+                  View All Luxury Facilities
+                  <ArrowRight className="ml-2 size-4" />
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* What to Look For */}
+      <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
+        <AnimateOnScroll className="text-center">
+          <h2 className="font-serif text-3xl font-light tracking-tight text-foreground sm:text-4xl">
+            What to Look For in Luxury Storage
+          </h2>
+          <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
+            Not all car storage is created equal. Here are the key features to
+            look for when storing a high-value vehicle.
+          </p>
+        </AnimateOnScroll>
+        <div className="mt-16 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {CHECKLIST_ITEMS.map((item, i) => (
+            <AnimateOnScroll key={item.title} delay={i * 80}>
+              <div className="flex gap-4 rounded-xl bg-card p-6 ring-1 ring-border">
+                <div className="flex size-12 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
                   <item.icon className="size-6" />
                 </div>
                 <div>
@@ -206,66 +203,72 @@ export default async function LuxuryCarStoragePage() {
                   </p>
                 </div>
               </div>
-            ))}
-          </div>
-        </section>
+            </AnimateOnScroll>
+          ))}
+        </div>
+      </section>
 
-        {/* Checklist Summary */}
-        <section className="bg-muted/50 py-16 sm:py-24">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="mx-auto max-w-3xl">
-              <h2 className="text-2xl font-bold tracking-tight text-foreground text-center">
-                Your Luxury Storage Checklist
+      {/* Checklist Summary */}
+      <section className="bg-card py-20 sm:py-28">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <AnimateOnScroll className="mx-auto max-w-3xl">
+            <h2 className="font-serif text-2xl font-light tracking-tight text-foreground text-center">
+              Your Luxury Storage Checklist
+            </h2>
+            <div className="mt-10 space-y-3">
+              {[
+                "Climate-controlled environment (temperature and humidity)",
+                "24/7 video surveillance and security monitoring",
+                "Individual alarmed bays or enclosed units",
+                "Battery tender connections and tire pressure monitoring",
+                "Fire suppression systems",
+                "Comprehensive insurance coverage for high-value vehicles",
+                "Professional detailing and maintenance services",
+                "Enclosed transport options for pickup and delivery",
+                "Limited access with biometric or key-card entry",
+                "Experienced staff familiar with exotic and classic vehicles",
+              ].map((item) => (
+                <div
+                  key={item}
+                  className="flex items-start gap-3 rounded-lg bg-muted ring-1 ring-border p-3.5"
+                >
+                  <CheckCircle2 className="size-5 text-primary shrink-0 mt-0.5" />
+                  <span className="text-sm text-foreground">{item}</span>
+                </div>
+              ))}
+            </div>
+          </AnimateOnScroll>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
+        <AnimateOnScroll>
+          <div className="relative overflow-hidden rounded-2xl bg-card px-8 py-20 text-center ring-1 ring-border sm:px-16">
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,oklch(0.20_0.02_85)_0%,transparent_70%)] opacity-50" />
+            <div className="relative z-10">
+              <h2 className="font-serif text-3xl font-light tracking-tight text-foreground sm:text-4xl">
+                Find Premium Storage for Your Vehicle
               </h2>
-              <div className="mt-8 space-y-3">
-                {[
-                  "Climate-controlled environment (temperature and humidity)",
-                  "24/7 video surveillance and security monitoring",
-                  "Individual alarmed bays or enclosed units",
-                  "Battery tender connections and tire pressure monitoring",
-                  "Fire suppression systems",
-                  "Comprehensive insurance coverage for high-value vehicles",
-                  "Professional detailing and maintenance services",
-                  "Enclosed transport options for pickup and delivery",
-                  "Limited access with biometric or key-card entry",
-                  "Experienced staff familiar with exotic and classic vehicles",
-                ].map((item) => (
-                  <div
-                    key={item}
-                    className="flex items-start gap-3 rounded-lg bg-card border p-3"
+              <p className="mt-6 text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                Search our network of verified luxury storage facilities. Compare
+                amenities, read reviews, and contact facilities directly.
+              </p>
+              <div className="mt-10">
+                <Link href="/search?vehicleType=EXOTIC,CLASSIC&storageType=CLIMATE_CONTROLLED">
+                  <Button
+                    size="lg"
+                    className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold px-8"
                   >
-                    <CheckCircle2 className="size-5 text-green-600 shrink-0 mt-0.5" />
-                    <span className="text-sm text-foreground">{item}</span>
-                  </div>
-                ))}
+                    Search Luxury Storage
+                    <ArrowRight className="ml-2 size-4" />
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>
-        </section>
-
-        {/* CTA */}
-        <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
-          <div className="rounded-2xl bg-gradient-to-r from-slate-900 to-slate-800 px-8 py-16 text-center shadow-xl sm:px-16">
-            <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-              Find Premium Storage for Your Vehicle
-            </h2>
-            <p className="mt-4 text-lg text-slate-300 max-w-2xl mx-auto">
-              Search our network of verified luxury storage facilities. Compare
-              amenities, read reviews, and contact facilities directly.
-            </p>
-            <div className="mt-8">
-              <Link href="/search?vehicleType=EXOTIC,CLASSIC&storageType=CLIMATE_CONTROLLED">
-                <Button
-                  size="lg"
-                  className="bg-amber-500 text-slate-900 hover:bg-amber-400 font-semibold px-8"
-                >
-                  Search Luxury Storage
-                  <ArrowRight className="ml-2 size-4" />
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </section>
+        </AnimateOnScroll>
+      </section>
     </>
   );
 }

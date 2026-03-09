@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
-import { Menu, Car, LogOut, LayoutDashboard, User } from "lucide-react";
+import { Menu, LogOut, LayoutDashboard, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -22,20 +22,33 @@ const NAV_LINKS = [
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const { data: session, status } = useSession();
 
   const isAuthed = status === "authenticated" && session?.user;
 
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur-sm supports-backdrop-filter:bg-white/80 dark:bg-background/95 dark:supports-backdrop-filter:bg-background/80">
-      <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+    <header
+      className={`sticky top-0 z-50 w-full transition-all duration-300 ${
+        scrolled
+          ? "border-b border-border bg-background/95 backdrop-blur-md"
+          : "border-b border-transparent bg-transparent"
+      }`}
+    >
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <Link
           href="/"
-          className="flex items-center gap-2 text-lg font-bold tracking-tight text-foreground"
+          className="font-serif text-xl font-light tracking-[0.2em] uppercase text-foreground transition-colors hover:text-primary"
         >
-          <Car className="size-6 text-primary" />
-          <span>AutoVault</span>
+          AutoVault
         </Link>
 
         {/* Desktop Nav */}
@@ -44,7 +57,7 @@ export function Header() {
             <Link
               key={link.href}
               href={link.href}
-              className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+              className="relative rounded-lg px-4 py-2 text-sm font-medium text-foreground/60 transition-colors hover:text-foreground"
             >
               {link.label}
             </Link>
@@ -52,12 +65,12 @@ export function Header() {
         </nav>
 
         {/* Desktop Actions */}
-        <div className="hidden items-center gap-3 md:flex">
+        <div className="hidden items-center gap-4 md:flex">
           {isAuthed ? (
             <>
               <Link
                 href="/dashboard"
-                className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                className="flex items-center gap-1.5 text-sm font-medium text-foreground/60 transition-colors hover:text-foreground"
               >
                 <LayoutDashboard className="size-4" />
                 Dashboard
@@ -67,19 +80,19 @@ export function Header() {
                   <img
                     src={session.user.image}
                     alt=""
-                    className="size-8 rounded-full border"
+                    className="size-8 rounded-full ring-1 ring-border"
                   />
                 </Link>
               ) : (
                 <Link href="/dashboard">
-                  <div className="size-8 rounded-full border bg-muted flex items-center justify-center">
+                  <div className="size-8 rounded-full ring-1 ring-border bg-muted flex items-center justify-center">
                     <User className="size-4 text-muted-foreground" />
                   </div>
                 </Link>
               )}
               <button
                 onClick={() => signOut()}
-                className="text-sm text-muted-foreground hover:text-foreground"
+                className="text-sm text-foreground/40 hover:text-foreground transition-colors"
                 title="Sign out"
               >
                 <LogOut className="size-4" />
@@ -89,11 +102,15 @@ export function Header() {
             <>
               <Link
                 href="/auth/signin"
-                className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                className="text-sm font-medium text-foreground/60 transition-colors hover:text-foreground"
               >
                 Sign In
               </Link>
-              <Button size="sm" render={<Link href="/auth/signin" />}>
+              <Button
+                size="sm"
+                className="bg-primary text-primary-foreground hover:bg-primary/90 font-medium"
+                render={<Link href="/auth/signin" />}
+              >
                 List Your Facility
               </Button>
             </>
@@ -105,21 +122,20 @@ export function Header() {
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger
               render={
-                <Button variant="ghost" size="icon">
+                <Button variant="ghost" size="icon" className="text-foreground/60 hover:text-foreground">
                   <Menu className="size-5" />
                   <span className="sr-only">Open menu</span>
                 </Button>
               }
             />
-            <SheetContent side="right">
+            <SheetContent side="right" className="bg-background border-border">
               <SheetHeader>
                 <SheetTitle>
                   <Link
                     href="/"
-                    className="flex items-center gap-2 text-lg font-bold"
+                    className="font-serif text-lg font-light tracking-[0.2em] uppercase text-foreground"
                     onClick={() => setMobileOpen(false)}
                   >
-                    <Car className="size-5 text-primary" />
                     AutoVault
                   </Link>
                 </SheetTitle>
@@ -131,20 +147,20 @@ export function Header() {
                     key={link.href}
                     href={link.href}
                     onClick={() => setMobileOpen(false)}
-                    className="rounded-lg px-3 py-2.5 text-base font-medium text-foreground transition-colors hover:bg-muted"
+                    className="rounded-lg px-3 py-3 text-base font-medium text-foreground/80 transition-colors hover:bg-muted hover:text-foreground"
                   >
                     {link.label}
                   </Link>
                 ))}
 
-                <div className="my-2 h-px bg-border" />
+                <div className="my-3 h-px bg-border" />
 
                 {isAuthed ? (
                   <>
                     <Link
                       href="/dashboard"
                       onClick={() => setMobileOpen(false)}
-                      className="rounded-lg px-3 py-2.5 text-base font-medium text-foreground transition-colors hover:bg-muted flex items-center gap-2"
+                      className="rounded-lg px-3 py-3 text-base font-medium text-foreground/80 transition-colors hover:bg-muted flex items-center gap-2"
                     >
                       <LayoutDashboard className="size-4" />
                       Dashboard
@@ -154,7 +170,7 @@ export function Header() {
                         setMobileOpen(false);
                         signOut();
                       }}
-                      className="rounded-lg px-3 py-2.5 text-base font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground text-left flex items-center gap-2"
+                      className="rounded-lg px-3 py-3 text-base font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground text-left flex items-center gap-2"
                     >
                       <LogOut className="size-4" />
                       Sign Out
@@ -165,12 +181,12 @@ export function Header() {
                     <Link
                       href="/auth/signin"
                       onClick={() => setMobileOpen(false)}
-                      className="rounded-lg px-3 py-2.5 text-base font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                      className="rounded-lg px-3 py-3 text-base font-medium text-foreground/60 transition-colors hover:bg-muted hover:text-foreground"
                     >
                       Sign In
                     </Link>
                     <Button
-                      className="mt-2"
+                      className="mt-3 bg-primary text-primary-foreground hover:bg-primary/90"
                       render={<Link href="/auth/signin" />}
                       onClick={() => setMobileOpen(false)}
                     >

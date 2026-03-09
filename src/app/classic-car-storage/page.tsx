@@ -2,7 +2,9 @@ import { prisma } from "@/lib/db";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Gauge, Droplets, Wrench, FileCheck } from "lucide-react";
+import { FacilityCard } from "@/components/facility-card";
+import { AnimateOnScroll } from "@/components/animate-on-scroll";
+import { Gauge, Droplets, Wrench, FileCheck, ArrowRight } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -13,6 +15,33 @@ export const metadata: Metadata = {
   keywords:
     "classic car storage, collector car storage, vintage car storage, antique car storage, museum car storage",
 };
+
+const FEATURES = [
+  {
+    icon: Gauge,
+    title: "Temperature Control",
+    description:
+      "Stable temperatures between 50-70°F prevent rubber degradation, fluid breakdown, and paint damage.",
+  },
+  {
+    icon: Droplets,
+    title: "Humidity Control",
+    description:
+      "40-50% relative humidity prevents rust, mold, and corrosion on chrome, steel, and leather.",
+  },
+  {
+    icon: Wrench,
+    title: "Maintenance Access",
+    description:
+      "Battery tenders, periodic engine runs, and fluid top-offs keep your classic road-ready.",
+  },
+  {
+    icon: FileCheck,
+    title: "Provenance Records",
+    description:
+      "Documented storage history adds value at auction and protects your investment's pedigree.",
+  },
+];
 
 export default async function ClassicCarStoragePage() {
   const facilities = await prisma.facility.findMany({
@@ -27,108 +56,76 @@ export default async function ClassicCarStoragePage() {
   });
 
   return (
-    <div>
-      {/* Hero */}
-      <section className="bg-gradient-to-b from-amber-900 to-amber-800 text-white py-20">
-        <div className="max-w-5xl mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            Classic Car Storage
-          </h1>
-          <p className="text-lg text-amber-100 max-w-2xl mx-auto mb-8">
-            Preserve your classic. Find storage facilities built to protect
-            vintage and collector automobiles for generations.
-          </p>
-          <Link href="/search?vehicleType=CLASSIC">
-            <Button size="lg" className="bg-white text-amber-900 hover:bg-amber-50">
-              Find Classic Storage Near You
-            </Button>
-          </Link>
+    <>
+      {/* Hero — warm tint for vintage feel */}
+      <section className="relative flex min-h-[60vh] items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,oklch(0.20_0.03_85)_0%,oklch(0.08_0_0)_70%)]" />
+        <div className="relative mx-auto max-w-4xl px-4 py-24 text-center sm:px-6 lg:px-8">
+          <div className="animate-fade-in-up">
+            <h1 className="font-serif text-5xl font-light leading-[1.1] tracking-tight text-foreground sm:text-6xl">
+              Classic Car Storage
+            </h1>
+            <p className="mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-foreground/60">
+              Preserve your classic. Find storage facilities built to protect
+              vintage and collector automobiles for generations.
+            </p>
+            <div className="mt-10">
+              <Link href="/search?vehicleType=CLASSIC">
+                <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 px-8 font-semibold">
+                  Find Classic Storage Near You
+                  <ArrowRight className="ml-2 size-4" />
+                </Button>
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Preservation Tips */}
-      <section className="py-16 max-w-5xl mx-auto px-4">
-        <h2 className="text-2xl font-bold text-center mb-12">
-          Essential Classic Car Storage Features
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          <div className="text-center">
-            <div className="w-12 h-12 rounded-full bg-amber-50 flex items-center justify-center mx-auto mb-4">
-              <Gauge className="h-6 w-6 text-amber-700" />
-            </div>
-            <h3 className="font-semibold mb-2">Temperature Control</h3>
-            <p className="text-sm text-muted-foreground">
-              Stable temperatures between 50-70°F prevent rubber degradation, fluid breakdown, and paint damage.
-            </p>
-          </div>
-          <div className="text-center">
-            <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center mx-auto mb-4">
-              <Droplets className="h-6 w-6 text-blue-600" />
-            </div>
-            <h3 className="font-semibold mb-2">Humidity Control</h3>
-            <p className="text-sm text-muted-foreground">
-              40-50% relative humidity prevents rust, mold, and corrosion on chrome, steel, and leather.
-            </p>
-          </div>
-          <div className="text-center">
-            <div className="w-12 h-12 rounded-full bg-green-50 flex items-center justify-center mx-auto mb-4">
-              <Wrench className="h-6 w-6 text-green-600" />
-            </div>
-            <h3 className="font-semibold mb-2">Maintenance Access</h3>
-            <p className="text-sm text-muted-foreground">
-              Battery tenders, periodic engine runs, and fluid top-offs keep your classic road-ready.
-            </p>
-          </div>
-          <div className="text-center">
-            <div className="w-12 h-12 rounded-full bg-purple-50 flex items-center justify-center mx-auto mb-4">
-              <FileCheck className="h-6 w-6 text-purple-600" />
-            </div>
-            <h3 className="font-semibold mb-2">Provenance Records</h3>
-            <p className="text-sm text-muted-foreground">
-              Documented storage history adds value at auction and protects your investment&apos;s pedigree.
-            </p>
-          </div>
+      {/* Preservation Features */}
+      <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
+        <AnimateOnScroll className="text-center">
+          <h2 className="font-serif text-3xl font-light tracking-tight text-foreground sm:text-4xl">
+            Essential Classic Car Storage Features
+          </h2>
+        </AnimateOnScroll>
+        <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+          {FEATURES.map((feature, i) => (
+            <AnimateOnScroll key={feature.title} delay={i * 100} className="text-center">
+              <div className="mx-auto flex size-14 items-center justify-center rounded-xl bg-primary/10 text-primary mb-5">
+                <feature.icon className="size-6" />
+              </div>
+              <h3 className="font-semibold text-foreground mb-2">{feature.title}</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {feature.description}
+              </p>
+            </AnimateOnScroll>
+          ))}
         </div>
       </section>
 
       {/* Facilities */}
       {facilities.length > 0 && (
-        <section className="py-16 bg-amber-50/50">
-          <div className="max-w-7xl mx-auto px-4">
-            <h2 className="text-2xl font-bold mb-8">
-              Classic Car Storage Facilities
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {facilities.map((f) => (
-                <Link key={f.id} href={`/facility/${f.slug}`}>
-                  <div className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                    <div
-                      className="h-48 bg-muted bg-cover bg-center"
-                      style={{
-                        backgroundImage: f.photos[0]
-                          ? `url(${f.photos[0].url})`
-                          : undefined,
-                      }}
-                    />
-                    <div className="p-4">
-                      <h3 className="font-semibold truncate">{f.name}</h3>
-                      <p className="text-sm text-muted-foreground">
-                        {f.city}, {f.state}
-                      </p>
-                      {f.avgRating > 0 && (
-                        <p className="text-sm mt-1">
-                          <span className="text-yellow-500">★</span> {f.avgRating.toFixed(1)}
-                          <span className="text-muted-foreground"> ({f.reviewCount})</span>
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </Link>
+        <section className="bg-card py-20 sm:py-28">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <AnimateOnScroll className="mb-14">
+              <div className="mx-auto mb-6 h-px w-12 bg-primary" />
+              <h2 className="font-serif text-3xl font-light tracking-tight text-foreground">
+                Classic Car Storage Facilities
+              </h2>
+            </AnimateOnScroll>
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {facilities.map((facility, i) => (
+                <AnimateOnScroll key={facility.id} delay={i * 80}>
+                  <FacilityCard facility={facility} />
+                </AnimateOnScroll>
               ))}
             </div>
-            <div className="text-center mt-8">
+            <div className="mt-12 text-center">
               <Link href="/search?vehicleType=CLASSIC">
-                <Button variant="outline">View All Classic Storage</Button>
+                <Button variant="outline" size="lg" className="px-8">
+                  View All Classic Storage
+                  <ArrowRight className="ml-2 size-4" />
+                </Button>
               </Link>
             </div>
           </div>
@@ -136,18 +133,25 @@ export default async function ClassicCarStoragePage() {
       )}
 
       {/* CTA */}
-      <section className="py-16 max-w-3xl mx-auto px-4 text-center">
-        <h2 className="text-2xl font-bold mb-4">
-          Specialize in Classic Car Storage?
-        </h2>
-        <p className="text-muted-foreground mb-6">
-          Reach collectors actively searching for the right facility to preserve
-          their vintage automobiles.
-        </p>
-        <Link href="/pricing">
-          <Button>List Your Facility</Button>
-        </Link>
+      <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
+        <AnimateOnScroll className="mx-auto max-w-3xl text-center">
+          <h2 className="font-serif text-3xl font-light tracking-tight text-foreground">
+            Specialize in Classic Car Storage?
+          </h2>
+          <p className="mt-6 text-muted-foreground leading-relaxed">
+            Reach collectors actively searching for the right facility to preserve
+            their vintage automobiles.
+          </p>
+          <div className="mt-8">
+            <Link href="/pricing">
+              <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 px-8">
+                List Your Facility
+                <ArrowRight className="ml-2 size-4" />
+              </Button>
+            </Link>
+          </div>
+        </AnimateOnScroll>
       </section>
-    </div>
+    </>
   );
 }

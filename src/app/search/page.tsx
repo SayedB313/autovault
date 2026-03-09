@@ -490,7 +490,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
               {/* Results Header */}
               <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <h1 className="text-xl font-semibold text-foreground">
+                  <h1 className="font-serif text-xl font-light text-foreground">
                     {totalCount}{" "}
                     {totalCount === 1 ? "Facility" : "Facilities"} Found
                   </h1>

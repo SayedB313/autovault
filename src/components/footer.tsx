@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Car } from "lucide-react";
 
 const FOOTER_COLUMNS = [
   {
@@ -43,35 +42,34 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t bg-slate-950 text-slate-300">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+    <footer className="border-t border-border bg-card">
+      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 gap-8 md:grid-cols-5">
           {/* Brand column */}
           <div className="col-span-2 md:col-span-1">
             <Link
               href="/"
-              className="flex items-center gap-2 text-lg font-bold text-white"
+              className="font-serif text-lg font-light tracking-[0.15em] uppercase text-foreground transition-colors hover:text-primary"
             >
-              <Car className="size-5" />
               AutoVault
             </Link>
-            <p className="mt-3 text-sm leading-relaxed text-slate-400">
-              Find the perfect car storage facility
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+              The premier network for luxury car storage worldwide.
             </p>
           </div>
 
           {/* Link columns */}
           {FOOTER_COLUMNS.map((column) => (
             <div key={column.title}>
-              <h3 className="text-sm font-semibold text-white">
+              <h3 className="text-xs font-semibold uppercase tracking-[0.15em] text-foreground/60">
                 {column.title}
               </h3>
-              <ul className="mt-3 space-y-2">
+              <ul className="mt-4 space-y-2.5">
                 {column.links.map((link) => (
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-sm text-slate-400 transition-colors hover:text-white"
+                      className="text-sm text-muted-foreground transition-colors hover:text-primary"
                     >
                       {link.label}
                     </Link>
@@ -83,8 +81,8 @@ export function Footer() {
         </div>
 
         {/* Copyright */}
-        <div className="mt-12 border-t border-slate-800 pt-6">
-          <p className="text-center text-xs text-slate-500">
+        <div className="mt-16 border-t border-border pt-8">
+          <p className="text-center text-xs text-muted-foreground/60 tracking-wider">
             &copy; {year} AutoVault. All rights reserved.
           </p>
         </div>

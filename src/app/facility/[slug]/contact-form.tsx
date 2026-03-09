@@ -71,7 +71,7 @@ export function ContactFacilityForm({ facilityId }: ContactFacilityFormProps) {
   if (status === "success") {
     return (
       <div className="flex flex-col items-center gap-3 py-6 text-center">
-        <CheckCircle2 className="size-10 text-green-600" />
+        <CheckCircle2 className="size-10 text-primary" />
         <h4 className="font-semibold text-foreground">Message Sent!</h4>
         <p className="text-sm text-muted-foreground">
           The facility will receive your inquiry and get back to you soon.

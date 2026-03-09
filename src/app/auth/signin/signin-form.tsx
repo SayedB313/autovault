@@ -33,7 +33,7 @@ export default function SignInForm() {
     <div className="min-h-[60vh] flex items-center justify-center px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl">Sign in to AutoVault</CardTitle>
+          <CardTitle className="font-serif text-2xl font-light">Sign in to AutoVault</CardTitle>
           <p className="text-muted-foreground">
             Manage your facility listings and track performance
           </p>
@@ -79,7 +79,7 @@ export default function SignInForm() {
 
           {emailSent ? (
             <div className="text-center py-4">
-              <p className="text-green-600 font-medium mb-1">Check your email!</p>
+              <p className="text-primary font-medium mb-1">Check your email!</p>
               <p className="text-sm text-muted-foreground">
                 We sent a sign-in link to <strong>{email}</strong>
               </p>
